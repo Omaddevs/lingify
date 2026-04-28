@@ -1,5 +1,8 @@
 import { Award, ChevronRight, Clock3, FileText, GraduationCap } from 'lucide-react'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
+import { useUser } from '../../context/UserContext'
+
+const DEFAULT_AVATAR = 'https://i.pravatar.cc/100?img=15'
 
 const examItems = [
   { name: 'IELTS Full Mock Test', meta: '2h 45m' },
@@ -17,6 +20,8 @@ const breakdown = [
 ]
 
 function BottomPanels() {
+  const { user } = useUser()
+
   return (
     <section className="grid gap-4 xl:grid-cols-[1.6fr_1fr_1fr]">
       <article className="dashboard-card">
@@ -69,17 +74,18 @@ function BottomPanels() {
         <button className="mt-2 w-full rounded-xl bg-primary py-2 text-sm font-semibold text-white">Review Answers</button>
       </article>
 
+      {/* Profile card — user data from UserContext */}
       <article className="dashboard-card">
         <h3 className="text-lg font-semibold text-slate-900">Profile</h3>
         <div className="mt-4 flex items-center gap-3">
           <img
-            src="https://i.pravatar.cc/100?img=15"
-            alt="Asadbek"
+            src={user.avatar ?? DEFAULT_AVATAR}
+            alt={user.name}
             className="h-12 w-12 rounded-xl object-cover"
           />
           <div>
-            <p className="font-semibold text-slate-800">Asadbek</p>
-            <p className="text-xs text-slate-500">@abdhek_01</p>
+            <p className="font-semibold text-slate-800">{user.name}</p>
+            <p className="text-xs text-slate-500">@{user.username}</p>
           </div>
         </div>
         <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-indigo-50/70 p-3 text-center">

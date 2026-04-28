@@ -1,8 +1,9 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   BookOpenCheck,
   CalendarDays,
   CheckCircle2,
-  ChevronDown,
   Flame,
   Headphones,
   Mic,
@@ -22,16 +23,54 @@ import {
 import Header from '../components/Header'
 import MobileBottomNav from '../components/Cards/MobileBottomNav'
 import Sidebar from '../components/Sidebar'
+import { useUser } from '../context/UserContext'
+
+// ── date helpers ────────────────────────────────────────────────────────────
+
+function getMondayOfWeek(date) {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  const day = d.getDay() || 7 // Sun → 7
+  d.setDate(d.getDate() - day + 1)
+  return d
+}
+
+function getISOWeekString(monday) {
+  // Returns "YYYY-Www" for use as <input type="week"> value
+  const d = new Date(monday)
+  d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7)) // nearest Thursday
+  const year = d.getFullYear()
+  const jan4 = new Date(year, 0, 4)
+  const weekNum =
+    1 +
+    Math.round(
+      ((d - jan4) / 86400000 - 3 + ((jan4.getDay() + 6) % 7)) / 7,
+    )
+  return `${year}-W${String(weekNum).padStart(2, '0')}`
+}
+
+function weekStringToMonday(weekStr) {
+  // Parses "YYYY-Www" → Monday Date
+  const [yearStr, wStr] = weekStr.split('-W')
+  const year = Number(yearStr)
+  const week = Number(wStr)
+  const jan4 = new Date(year, 0, 4)
+  const jan4Day = jan4.getDay() || 7
+  const week1Monday = new Date(jan4)
+  week1Monday.setDate(jan4.getDate() - jan4Day + 1)
+  const monday = new Date(week1Monday)
+  monday.setDate(week1Monday.getDate() + (week - 1) * 7)
+  return monday
+}
+
+function formatWeekRange(start, end) {
+  const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return `${fmt(start)} – ${fmt(end)}, ${end.getFullYear()}`
+}
+
+// ── static chart / stat data ────────────────────────────────────────────────
 
 const tabs = ['Overview', 'Skills', 'Mock Exams', 'Lessons', 'Achievements']
-
-const topStats = [
-  { title: 'Overall Progress', value: '68%', note: "Keep it up! You're doing great." },
-  { title: 'Study Time', value: '18h 45m', note: '+12% this week' },
-  { title: 'Lessons Completed', value: '24', note: '+6 this week' },
-  { title: 'Mock Tests Taken', value: '8', note: '+2 this week' },
-  { title: 'Current Streak', value: '12', note: 'days', icon: Flame },
-]
 
 const weeklyData = [
   { day: 'Mon', hours: 2.5 },
@@ -54,9 +93,9 @@ const levelData = [
 
 const skills = [
   { title: 'Listening', score: 7.5, avg: 7.0, icon: Headphones, color: 'bg-indigo-500' },
-  { title: 'Reading', score: 7.0, avg: 6.8, icon: BookOpenCheck, color: 'bg-emerald-500' },
-  { title: 'Writing', score: 6.5, avg: 6.2, icon: PenLine, color: 'bg-amber-500' },
-  { title: 'Speaking', score: 7.0, avg: 6.7, icon: Mic, color: 'bg-violet-500' },
+  { title: 'Reading',   score: 7.0, avg: 6.8, icon: BookOpenCheck, color: 'bg-emerald-500' },
+  { title: 'Writing',   score: 6.5, avg: 6.2, icon: PenLine, color: 'bg-amber-500' },
+  { title: 'Speaking',  score: 7.0, avg: 6.7, icon: Mic, color: 'bg-violet-500' },
 ]
 
 const activities = [
@@ -66,22 +105,58 @@ const activities = [
   { title: 'Watched Speaking Lesson', meta: 'Tips for Part 2', time: '2d ago' },
 ]
 
+// ── component ────────────────────────────────────────────────────────────────
+
 function ProgressPage() {
+  const { user } = useUser()
+
+  // FIXED: [3] tab state replaces hardcoded index === 0
+  const [activeTab, setActiveTab] = useState(0)
+
+  // TASK 4: date range — initialised to the current ISO week
+  const [dateRange, setDateRange] = useState(() => {
+    const monday = getMondayOfWeek(new Date())
+    const sunday = new Date(monday)
+    sunday.setDate(monday.getDate() + 6)
+    return { start: monday, end: sunday }
+  })
+
+  const weekInputValue = getISOWeekString(dateRange.start)
+
+  const handleWeekChange = (e) => {
+    if (!e.target.value) return
+    const monday = weekStringToMonday(e.target.value)
+    const sunday = new Date(monday)
+    sunday.setDate(monday.getDate() + 6)
+    setDateRange({ start: monday, end: sunday })
+  }
+
+  // TASK 1: streak driven by UserContext
+  const topStats = [
+    { title: 'Overall Progress', value: '68%', note: "Keep it up! You're doing great." },
+    { title: 'Study Time', value: '18h 45m', note: '+12% this week' },
+    { title: 'Lessons Completed', value: '24', note: '+6 this week' },
+    { title: 'Mock Tests Taken', value: '8', note: '+2 this week' },
+    { title: 'Current Streak', value: String(user.streak), note: 'days', icon: Flame },
+  ]
+
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-5 md:px-6">
       <div className="flex w-full gap-5">
-        <Sidebar activeItem="Progress" />
+        <Sidebar />
 
         <main className="min-h-[calc(100vh-40px)] w-full rounded-[20px] border border-slate-200 bg-white p-4 shadow-md md:p-6">
           <Header title="Progress" subtitle="Track your learning journey and improve every day." />
 
+          {/* tabs + TASK 4: week picker */}
           <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div className="flex gap-3 overflow-x-auto pb-1">
               {tabs.map((tab, index) => (
                 <button
                   key={tab}
-                  className={`whitespace-nowrap border-b-2 px-1 pb-2 text-sm font-medium ${
-                    index === 0
+                  onClick={() => setActiveTab(index)}
+                  className={`whitespace-nowrap border-b-2 px-1 pb-2 text-sm font-medium transition ${
+                    activeTab === index
                       ? 'border-indigo-600 text-indigo-600'
                       : 'border-transparent text-slate-500 hover:text-slate-700'
                   }`}
@@ -90,13 +165,20 @@ function ProgressPage() {
                 </button>
               ))}
             </div>
-            <button className="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">
-              <CalendarDays size={14} />
-              May 12 - May 18, 2024
-              <ChevronDown size={14} />
-            </button>
+
+            {/* TASK 4: controlled week input replaces static "May 12 - May 18, 2024" */}
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">
+              <CalendarDays size={14} className="shrink-0 text-slate-400" />
+              <input
+                type="week"
+                value={weekInputValue}
+                onChange={handleWeekChange}
+                className="border-none bg-transparent text-sm text-slate-700 outline-none"
+              />
+            </label>
           </section>
 
+          {/* stat cards */}
           <section className="grid gap-3 md:grid-cols-5">
             {topStats.map((item) => (
               <article key={item.title} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -111,13 +193,15 @@ function ProgressPage() {
           </section>
 
           <section className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+            {/* TASK 4: formatted week range shown above the bar chart */}
             <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-2 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-900">Weekly Study Time</h3>
-                <button className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-xs text-slate-600">
-                  This Week
-                  <ChevronDown size={12} />
-                </button>
+              <div className="mb-2 flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">Weekly Study Time</h3>
+                  <p className="mt-0.5 text-xs text-slate-400">
+                    {formatWeekRange(dateRange.start, dateRange.end)}
+                  </p>
+                </div>
               </div>
               <div className="h-56">
                 <ResponsiveContainer>
@@ -176,7 +260,9 @@ function ProgressPage() {
             <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
-                <button className="text-sm font-medium text-indigo-600">View all</button>
+                <Link to="/progress/activity" className="text-sm font-medium text-indigo-600 hover:underline">
+                  View all
+                </Link>
               </div>
               <div className="space-y-3">
                 {activities.map((item) => (

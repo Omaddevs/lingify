@@ -40,7 +40,7 @@ function OnlineLessonsPage() {
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-5 md:px-6">
       <div className="flex w-full gap-5">
-        <Sidebar activeItem="Online Lessons" />
+        <Sidebar /> {/* FIXED: [2] activeItem prop removed */}
 
         <main className="min-h-[calc(100vh-40px)] w-full rounded-[20px] border border-slate-200 bg-white p-4 shadow-md md:p-6">
           <Header title="Online Lessons" subtitle="Learn with expert teachers and structured lessons" />

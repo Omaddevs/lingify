@@ -1,26 +1,39 @@
 import { CheckCircle2, Mic, Sparkles } from 'lucide-react'
+import { useUser } from '../../context/UserContext'
 
-function CircleProgress() {
+const LEVEL_LABELS = {
+  A1: 'Beginner',
+  A2: 'Elementary',
+  B1: 'Intermediate',
+  B2: 'Upper Intermediate',
+  C1: 'Advanced',
+  C2: 'Mastery',
+}
+
+function CircleProgress({ pct }) {
   return (
     <div className="relative h-24 w-24">
       <div className="absolute inset-0 rounded-full border-[10px] border-indigo-100" />
       <div className="absolute inset-0 rounded-full border-[10px] border-transparent border-t-primary border-r-primary rotate-[35deg]" />
-      <div className="absolute inset-0 grid place-items-center text-sm font-semibold text-slate-800">60%</div>
+      <div className="absolute inset-0 grid place-items-center text-sm font-semibold text-slate-800">{pct}</div>
     </div>
   )
 }
 
 function OverviewCards() {
+  const { user } = useUser()
+
   return (
     <section className="grid gap-4 lg:grid-cols-3">
+      {/* Your Level — driven by UserContext */}
       <article className="dashboard-card">
         <p className="text-sm text-slate-500">Your Level</p>
         <div className="mt-3 flex items-center justify-between">
           <div>
-            <p className="text-3xl font-bold tracking-tight text-slate-900">B1</p>
-            <p className="text-sm text-slate-500">Intermediate</p>
+            <p className="text-3xl font-bold tracking-tight text-slate-900">{user.level}</p>
+            <p className="text-sm text-slate-500">{LEVEL_LABELS[user.level] ?? user.level}</p>
           </div>
-          <CircleProgress />
+          <CircleProgress pct="60%" />
         </div>
       </article>
 

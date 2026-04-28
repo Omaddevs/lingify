@@ -1,3 +1,4 @@
+import { useState } from 'react' // FIXED: [3] added useState for tab management
 import {
   AlarmClock,
   BarChart3,
@@ -43,10 +44,12 @@ const performanceRows = [
 ]
 
 function MockExamPage() {
+  const [activeTab, setActiveTab] = useState(0) // FIXED: [3] tab state replaces hardcoded index === 0
+
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-5 md:px-6">
       <div className="flex w-full gap-5">
-        <Sidebar activeItem="Mock Exam" />
+        <Sidebar /> {/* FIXED: [2] activeItem prop removed */}
 
         <main className="min-h-[calc(100vh-40px)] w-full rounded-[20px] border border-slate-200 bg-white p-4 shadow-md md:p-6">
           <Header title="Mock Exam" subtitle="Simulate real tests and track your performance" />
@@ -56,8 +59,9 @@ function MockExamPage() {
               {examTabs.map((tab, index) => (
                 <button
                   key={tab}
+                  onClick={() => setActiveTab(index)} // FIXED: [3] onClick updates active tab
                   className={`rounded-lg px-4 py-2 text-xs font-semibold transition ${
-                    index === 0
+                    activeTab === index // FIXED: [3] activeTab state replaces hardcoded index === 0
                       ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}

@@ -1,4 +1,5 @@
 import { BookOpenCheck, ChevronRight, Flame, Star, Volume2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import MobileBottomNav from '../components/Cards/MobileBottomNav'
 import Sidebar from '../components/Sidebar'
@@ -30,7 +31,7 @@ function VocabularyPage() {
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-5 md:px-6">
       <div className="flex w-full gap-5">
-        <Sidebar activeItem="Vocabulary" />
+        <Sidebar /> {/* FIXED: [2] activeItem prop removed */}
 
         <main className="min-h-[calc(100vh-40px)] w-full rounded-[20px] border border-slate-200 bg-white p-4 shadow-md md:p-6">
           <Header title="Vocabulary" subtitle="Expand your vocabulary. One word at a time." />
@@ -70,7 +71,9 @@ function VocabularyPage() {
           <section className="mt-4">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-xl font-semibold text-slate-900">Categories</h3>
-              <button className="text-sm font-medium text-indigo-600">View all</button>
+              <Link to="/vocabulary/categories" className="text-sm font-medium text-indigo-600 hover:underline">
+                View all
+              </Link>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
               {categories.map((item) => (
@@ -99,24 +102,37 @@ function VocabularyPage() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-semibold text-slate-800">{word.term}</p>
-                        <button className="text-slate-400 hover:text-indigo-600">
-                          <Volume2 size={14} />
+                        <button
+                          type="button"
+                          aria-label={`Pronounce ${word.term}`}
+                          onClick={() => window.speechSynthesis?.speak(Object.assign(new SpeechSynthesisUtterance(word.term), { lang: 'en-US' }))}
+                          className="text-slate-400 hover:text-indigo-600"
+                        >
+                          <Volume2 size={14} aria-hidden="true" />
                         </button>
                       </div>
                       <p className="mt-1 text-xs text-slate-500">{word.meaning}</p>
                     </div>
                     <div className="ml-3 flex items-center gap-2">
                       <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-600">{word.level}</span>
-                      <button className={word.favorite ? 'text-amber-500' : 'text-slate-300'}>
-                        <Star size={14} fill={word.favorite ? 'currentColor' : 'none'} />
+                      <button
+                        type="button"
+                        aria-label={word.favorite ? `Remove ${word.term} from favourites` : `Add ${word.term} to favourites`}
+                        aria-pressed={!!word.favorite}
+                        className={word.favorite ? 'text-amber-500' : 'text-slate-300'}
+                      >
+                        <Star size={14} aria-hidden="true" fill={word.favorite ? 'currentColor' : 'none'} />
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
-              <button className="mt-3 w-full rounded-xl border border-slate-200 py-2 text-sm font-medium text-indigo-600 hover:bg-slate-50">
+              <Link
+                to="/vocabulary/words"
+                className="mt-3 block w-full rounded-xl border border-slate-200 py-2 text-center text-sm font-medium text-indigo-600 hover:bg-slate-50"
+              >
                 View All Words
-              </button>
+              </Link>
             </article>
 
             <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
