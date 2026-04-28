@@ -213,6 +213,396 @@ Receptionist: Wonderful. Your reservation is confirmed for March 15-18, double r
   },
 ]
 
+// Original, copyright-safe IELTS-style pack (v1)
+export const IELTS_ORIGINAL_READING_PASSAGES = [
+  {
+    id: 'ielts-or-r1',
+    title: 'Why Cities Are Planting More Trees',
+    text: `Many cities are increasing tree coverage as part of long-term climate and public health planning. Trees lower surface temperatures by providing shade and releasing moisture through transpiration, which can reduce the urban heat island effect. In districts with limited green space, these temperature differences can be significant, especially during summer heatwaves.
+
+Urban planners also value trees for their social and economic benefits. Streets with mature trees are often associated with higher walkability and increased local business activity. In residential areas, trees can reduce noise and improve perceived neighborhood quality. Researchers have also linked access to green environments with lower stress levels and improved mental wellbeing.
+
+However, successful planting programs require careful species selection and maintenance. Trees that are poorly matched to local soil conditions may fail to survive, creating avoidable costs. Root systems can damage pavements and underground infrastructure if spacing is not planned correctly. Watering schedules are particularly important in the first years after planting.
+
+To address these issues, several municipalities now combine traditional forestry expertise with digital monitoring tools. Sensors and satellite imagery help track canopy growth and soil moisture, allowing teams to prioritize high-risk areas. This data-driven approach supports more efficient budgets and improves survival rates, turning urban tree planting into a strategic, measurable policy rather than a symbolic gesture.`,
+    questions: [
+      {
+        id: 'or-r1-q1',
+        type: 'multiple_choice',
+        question: 'What is one direct environmental benefit of urban trees mentioned in the passage?',
+        options: [
+          'They increase traffic speed in city centers',
+          'They reduce the urban heat island effect',
+          'They replace the need for public transport',
+          'They eliminate all forms of air pollution',
+        ],
+        correct: 1,
+      },
+      {
+        id: 'or-r1-q2',
+        type: 'true_false_ng',
+        question: 'The passage says trees always increase property prices in every district.',
+        options: ['True', 'False', 'Not Given'],
+        correct: 1,
+      },
+      {
+        id: 'or-r1-q3',
+        type: 'multiple_choice',
+        question: 'Why can poor species selection be costly?',
+        options: [
+          'Because trees grow too fast for digital monitoring',
+          'Because unsuitable trees may not survive local conditions',
+          'Because residents refuse to maintain trees',
+          'Because mature trees cannot provide shade',
+        ],
+        correct: 1,
+      },
+      {
+        id: 'or-r1-q4',
+        type: 'multiple_choice',
+        question: 'Which technology is described as helping city teams prioritize areas?',
+        options: ['Blockchain and drones', 'Sensors and satellite imagery', 'Paper maps and surveys', 'Virtual reality mapping'],
+        correct: 1,
+      },
+      {
+        id: 'or-r1-q5',
+        type: 'multiple_choice',
+        question: 'The word "symbolic" in the final sentence is closest in meaning to:',
+        options: ['purely decorative', 'financially efficient', 'scientifically proven', 'legally required'],
+        correct: 0,
+      },
+    ],
+  },
+  {
+    id: 'ielts-or-r2',
+    title: 'The Rise of Remote Medical Consultations',
+    text: `Remote medical consultations, often called telehealth appointments, became more common during public health emergencies and have remained an important part of healthcare delivery. For many patients, especially those in rural areas, remote access reduces travel time and allows quicker follow-up with specialists.
+
+Clinicians report that telehealth works particularly well for routine reviews, prescription renewals, and discussions of test results. These interactions typically rely on clear communication rather than physical examination. Hospitals also benefit by reducing crowding in outpatient departments, which can improve scheduling efficiency.
+
+Nevertheless, remote consultations are not suitable in all cases. Patients with complex symptoms may require in-person assessment, including physical tests or immediate treatment. Digital access is another barrier: some patients lack stable internet connections or confidence using online platforms. These gaps can reinforce existing inequalities in care.
+
+Health systems are therefore adopting blended models that combine remote and face-to-face appointments. Under this approach, initial triage may be performed online, with rapid referral to clinics when necessary. Supporters argue that such models can increase convenience without compromising clinical safety, provided that clear referral protocols are in place.`,
+    questions: [
+      {
+        id: 'or-r2-q1',
+        type: 'multiple_choice',
+        question: 'According to the passage, telehealth is especially useful for:',
+        options: [
+          'Major emergency surgery',
+          'Routine reviews and discussing test results',
+          'Replacing all in-person appointments',
+          'Treating patients without any diagnosis',
+        ],
+        correct: 1,
+      },
+      {
+        id: 'or-r2-q2',
+        type: 'true_false_ng',
+        question: 'The passage states that all patients have equal digital access for telehealth.',
+        options: ['True', 'False', 'Not Given'],
+        correct: 1,
+      },
+      {
+        id: 'or-r2-q3',
+        type: 'multiple_choice',
+        question: 'What is a key concern with remote consultations?',
+        options: [
+          'They always take longer than clinic visits',
+          'They eliminate the need for triage',
+          'Some patients still need physical assessment',
+          'They can only be used in private hospitals',
+        ],
+        correct: 2,
+      },
+      {
+        id: 'or-r2-q4',
+        type: 'multiple_choice',
+        question: 'What does the blended model involve?',
+        options: [
+          'Using only remote consultations',
+          'Using only face-to-face treatment',
+          'Combining online triage with in-person care when needed',
+          'Sending all patients directly to emergency departments',
+        ],
+        correct: 2,
+      },
+      {
+        id: 'or-r2-q5',
+        type: 'multiple_choice',
+        question: 'The main idea of the final paragraph is that blended care can work if:',
+        options: [
+          'there are clear referral protocols',
+          'patients avoid specialist treatment',
+          'internet access is ignored',
+          'hospitals remove outpatient departments',
+        ],
+        correct: 0,
+      },
+    ],
+  },
+]
+
+export const IELTS_ORIGINAL_LISTENING_SECTIONS = [
+  {
+    id: 'ielts-or-l1',
+    section: 1,
+    title: 'Conversation: Evening Course Registration',
+    audioDescription: 'Community center registration call',
+    audioUrl: '/audio/ielts-original-s1.aiff',
+    transcript: `Agent: Good morning. You have reached City Skills Training. How can I help you today?
+Caller: Hi, I would like to register for an evening English course.
+Agent: Certainly. We have classes on Tuesdays and Thursdays from 6:30 to 8:00.
+Caller: That sounds good. How much is the monthly fee?
+Agent: The monthly fee is £120, and materials are included.`,
+    questions: [
+      { id: 'or-l1-q1', type: 'multiple_choice', question: 'What course does the caller want to join?', options: ['Math course', 'Evening English course', 'Weekend science course', 'Online business course'], correct: 1 },
+      { id: 'or-l1-q2', type: 'multiple_choice', question: 'Which days are classes held?', options: ['Monday and Wednesday', 'Tuesday and Thursday', 'Wednesday and Friday', 'Saturday only'], correct: 1 },
+      { id: 'or-l1-q3', type: 'multiple_choice', question: 'What time do classes end?', options: ['7:30', '8:00', '8:30', '9:00'], correct: 1 },
+      { id: 'or-l1-q4', type: 'multiple_choice', question: 'How much is the monthly fee?', options: ['£100', '£110', '£120', '£130'], correct: 2 },
+      { id: 'or-l1-q5', type: 'true_false_ng', question: 'Course materials are included in the fee.', options: ['True', 'False', 'Not Given'], correct: 0 },
+    ],
+  },
+  {
+    id: 'ielts-or-l2',
+    section: 2,
+    title: 'Talk: Reducing Household Waste',
+    audioDescription: 'Short radio advice segment',
+    audioUrl: '/audio/ielts-original-s2.aiff',
+    transcript: `Presenter: Welcome to Greenline Community Radio.
+Today we are sharing practical tips for reducing household waste.
+First, plan your meals before shopping.
+Second, carry reusable bags and containers.
+Third, separate paper, plastic and glass at home.
+Finally, donate usable items instead of throwing them away.`,
+    questions: [
+      { id: 'or-l2-q1', type: 'multiple_choice', question: 'What is the main topic of the talk?', options: ['Saving electricity', 'Reducing household waste', 'Growing food at home', 'Buying cheaper products'], correct: 1 },
+      { id: 'or-l2-q2', type: 'multiple_choice', question: 'What should listeners do before shopping?', options: ['Check bus schedules', 'Plan meals', 'Call local stores', 'Clean containers'], correct: 1 },
+      { id: 'or-l2-q3', type: 'multiple_choice', question: 'Which item is specifically mentioned as reusable?', options: ['Books', 'Batteries', 'Bags', 'Shoes'], correct: 2 },
+      { id: 'or-l2-q4', type: 'multiple_choice', question: 'Which materials are mentioned for separation at home?', options: ['Wood, metal, paper', 'Paper, plastic, glass', 'Plastic, food, fabric', 'Glass, electronics, batteries'], correct: 1 },
+      { id: 'or-l2-q5', type: 'true_false_ng', question: 'Usable items should be donated instead of thrown away.', options: ['True', 'False', 'Not Given'], correct: 0 },
+    ],
+  },
+]
+
+export const IELTS_ORIGINAL_WRITING_TASKS = [
+  {
+    id: 'ielts-or-w1',
+    task: 1,
+    title: 'Academic Writing Task 1',
+    prompt: `The chart below compares the percentage of employees working remotely in three sectors (Technology, Education, and Finance) in 2019 and 2025.
+
+Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+
+Write at least 150 words.`,
+    timeLimit: 20,
+    wordLimit: 150,
+    bandDescriptors: [
+      'Task Achievement',
+      'Coherence and Cohesion',
+      'Lexical Resource',
+      'Grammatical Range and Accuracy',
+    ],
+  },
+  {
+    id: 'ielts-or-w2',
+    task: 2,
+    title: 'Academic Writing Task 2',
+    prompt: `Some people think that schools should focus more on practical life skills than on traditional academic subjects.
+
+To what extent do you agree or disagree?
+
+Write at least 250 words.`,
+    timeLimit: 40,
+    wordLimit: 250,
+    bandDescriptors: [
+      'Task Response',
+      'Coherence and Cohesion',
+      'Lexical Resource',
+      'Grammatical Range and Accuracy',
+    ],
+  },
+]
+
+export const IELTS_ORIGINAL_SPEAKING_PARTS = [
+  {
+    id: 'ielts-or-s1',
+    part: 1,
+    title: 'Part 1 — Introduction and Interview',
+    duration: '4-5 minutes',
+    questions: [
+      'Where do you live now?',
+      'What do you like most about your hometown?',
+      'How do you usually spend your evenings?',
+      'Do you prefer studying alone or with others?',
+    ],
+  },
+  {
+    id: 'ielts-or-s2',
+    part: 2,
+    title: 'Part 2 — Individual Long Turn',
+    duration: '3-4 minutes',
+    cueCard: {
+      topic: 'Describe a skill you learned that was useful in your daily life.',
+      points: ['What the skill is', 'How you learned it', 'When you use it', 'Why it is useful for you'],
+    },
+  },
+  {
+    id: 'ielts-or-s3',
+    part: 3,
+    title: 'Part 3 — Discussion',
+    duration: '4-5 minutes',
+    questions: [
+      'How important are practical skills in modern education?',
+      'Do you think online courses can teach practical skills effectively?',
+      'What skills will be most valuable for future jobs?',
+    ],
+  },
+]
+
+export const IELTS_CAMBRIDGE_LISTENING_LIBRARY = Array.from({ length: 19 }, (_, i) => {
+  const no = i + 1
+  return {
+    id: `ielts-c${no}-listening-original`,
+    title: `Cambridge IELTS Test ${no} — Listening`,
+    time: 30,
+    questions: 40,
+    available: no === 11,
+    description: no === 11 ? 'Original copyright-safe full listening mock (4 sections).' : 'Coming soon',
+  }
+})
+
+export const IELTS_CAMBRIDGE_READING_LIBRARY = Array.from({ length: 19 }, (_, i) => {
+  const no = i + 1
+  return {
+    id: `ielts-c${no}-reading-original`,
+    title: `Cambridge IELTS Test ${no} — Reading`,
+    time: 60,
+    questions: 40,
+    available: no === 11,
+    description: no === 11 ? 'Original copyright-safe reading mock (3 passages).' : 'Coming soon',
+  }
+})
+
+export const IELTS_C11_ORIGINAL_LISTENING_SECTIONS = [
+  {
+    id: 'c11-l1',
+    section: 1,
+    title: 'Section 1 — Course Registration',
+    audioDescription: 'Conversation in an education office',
+    audioUrl: '/audio/ielts-original-s1.aiff',
+    transcript: `Staff: Good morning. How can I help you?
+Student: I would like to register for an evening English class.
+Staff: We have classes twice a week and the monthly fee is £120 including materials.`,
+    questions: [
+      { id: 'c11-l1-q1', type: 'multiple_choice', question: 'Why is the student calling?', options: ['To cancel a class', 'To register for a course', 'To request a refund', 'To buy a textbook'], correct: 1 },
+      { id: 'c11-l1-q2', type: 'multiple_choice', question: 'How often are the classes?', options: ['Once a week', 'Twice a week', 'Every day', 'On weekends only'], correct: 1 },
+      { id: 'c11-l1-q3', type: 'multiple_choice', question: 'What is included in the fee?', options: ['Transport', 'Exam fee', 'Materials', 'Accommodation'], correct: 2 },
+      { id: 'c11-l1-q4', type: 'true_false_ng', question: 'The monthly fee is £120.', options: ['True', 'False', 'Not Given'], correct: 0 },
+      { id: 'c11-l1-q5', type: 'multiple_choice', question: 'The dialogue mostly takes place in:', options: ['A hotel', 'A school office', 'A travel agency', 'A hospital'], correct: 1 },
+    ],
+  },
+  {
+    id: 'c11-l2',
+    section: 2,
+    title: 'Section 2 — Public Advice Talk',
+    audioDescription: 'Short public information radio segment',
+    audioUrl: '/audio/ielts-original-s2.aiff',
+    transcript: `Presenter: Today we discuss household waste reduction.
+Plan meals before shopping and separate paper, plastic and glass at home.`,
+    questions: [
+      { id: 'c11-l2-q1', type: 'multiple_choice', question: 'What is the focus of the talk?', options: ['Energy bills', 'Household waste reduction', 'Street cleaning', 'Public transport'], correct: 1 },
+      { id: 'c11-l2-q2', type: 'multiple_choice', question: 'Which action is recommended before shopping?', options: ['Call stores', 'Plan meals', 'Check weather', 'Print receipts'], correct: 1 },
+      { id: 'c11-l2-q3', type: 'multiple_choice', question: 'Which materials are mentioned?', options: ['Paper, plastic, glass', 'Metal, wood, paper', 'Plastic, cloth, food', 'Glass, phones, batteries'], correct: 0 },
+      { id: 'c11-l2-q4', type: 'true_false_ng', question: 'The presenter advises throwing usable items away.', options: ['True', 'False', 'Not Given'], correct: 1 },
+      { id: 'c11-l2-q5', type: 'multiple_choice', question: 'The speaker tone is best described as:', options: ['Humorous', 'Instructional', 'Critical', 'Argumentative'], correct: 1 },
+    ],
+  },
+  {
+    id: 'c11-l3',
+    section: 3,
+    title: 'Section 3 — Academic Discussion',
+    audioDescription: 'University tutorial on transport planning',
+    audioUrl: '/audio/ielts-c11-s3.aiff',
+    transcript: `Tutor: Urban transport planning now uses integrated ticketing and smart signals.
+Student: So the goal is fewer delays and smoother transfers across modes.`,
+    questions: [
+      { id: 'c11-l3-q1', type: 'multiple_choice', question: 'What is the main topic?', options: ['Airline pricing', 'Urban transport planning', 'Rural tourism', 'Water treatment'], correct: 1 },
+      { id: 'c11-l3-q2', type: 'multiple_choice', question: 'What do smart traffic signals help reduce?', options: ['Ticket prices', 'Congestion', 'Rainfall', 'Noise from aircraft'], correct: 1 },
+      { id: 'c11-l3-q3', type: 'multiple_choice', question: 'Integrated ticketing allows passengers to:', options: ['Travel for free', 'Transfer more efficiently', 'Skip security checks', 'Avoid peak hours'], correct: 1 },
+      { id: 'c11-l3-q4', type: 'true_false_ng', question: 'The speaker says bicycle lanes are part of planning.', options: ['True', 'False', 'Not Given'], correct: 0 },
+      { id: 'c11-l3-q5', type: 'multiple_choice', question: 'The expected outcome is:', options: ['Longer delays', 'Smoother transfers', 'Higher taxes only', 'Fewer bus routes'], correct: 1 },
+    ],
+  },
+  {
+    id: 'c11-l4',
+    section: 4,
+    title: 'Section 4 — Academic Lecture',
+    audioDescription: 'Lecture on citizen science and environment',
+    audioUrl: '/audio/ielts-c11-s4.aiff',
+    transcript: `Lecturer: Citizen science projects collect local data on air and water quality.
+Researchers validate this information to support policy decisions.`,
+    questions: [
+      { id: 'c11-l4-q1', type: 'multiple_choice', question: 'What is the lecture mainly about?', options: ['Medical training', 'Citizen science projects', 'Museum funding', 'Space tourism'], correct: 1 },
+      { id: 'c11-l4-q2', type: 'multiple_choice', question: 'Who collects local environmental data?', options: ['Only ministers', 'Volunteers', 'Private banks', 'Tourists'], correct: 1 },
+      { id: 'c11-l4-q3', type: 'multiple_choice', question: 'What do researchers do with the data?', options: ['Sell it online', 'Validate and analyse it', 'Delete it quickly', 'Ignore it'], correct: 1 },
+      { id: 'c11-l4-q4', type: 'true_false_ng', question: 'Data includes biodiversity observations.', options: ['True', 'False', 'Not Given'], correct: 0 },
+      { id: 'c11-l4-q5', type: 'multiple_choice', question: 'A key benefit mentioned is better:', options: ['Entertainment', 'Policy decisions', 'Airport services', 'Fashion design'], correct: 1 },
+    ],
+  },
+]
+
+export const IELTS_C11_ORIGINAL_READING_PASSAGES = [
+  {
+    id: 'c11-r1',
+    title: 'Passage 1 — Neighborhood Libraries in the Digital Age',
+    text: `Many city libraries have transformed from quiet book-lending spaces into multifunctional community hubs. In addition to printed materials, modern libraries provide digital access, language courses, and career support workshops.
+
+Library managers report that demand for study rooms and public computers has increased, particularly among students and job seekers. Some branches also lend tablets and portable internet devices to reduce digital inequality.
+
+Despite these expansions, funding remains a challenge. Local authorities often face competing priorities, and libraries must demonstrate measurable social value to secure long-term investment.`,
+    questions: [
+      { id: 'c11-r1-q1', type: 'multiple_choice', question: 'What new role do libraries have?', options: ['Only museum exhibitions', 'Multifunctional community hubs', 'Private language schools', 'Sports arenas'], correct: 1 },
+      { id: 'c11-r1-q2', type: 'multiple_choice', question: 'Who especially uses study rooms and computers?', options: ['Tour guides', 'Students and job seekers', 'Airline staff', 'Factory owners'], correct: 1 },
+      { id: 'c11-r1-q3', type: 'true_false_ng', question: 'All branches lend portable internet devices.', options: ['True', 'False', 'Not Given'], correct: 2 },
+      { id: 'c11-r1-q4', type: 'multiple_choice', question: 'What is a major challenge?', options: ['Lack of books only', 'Funding pressure', 'No community interest', 'No internet access'], correct: 1 },
+      { id: 'c11-r1-q5', type: 'multiple_choice', question: 'Libraries need to show:', options: ['Higher book prices', 'Social value', 'Foreign ownership', 'Shorter opening hours'], correct: 1 },
+    ],
+  },
+  {
+    id: 'c11-r2',
+    title: 'Passage 2 — Coastal Cities and Flood Adaptation',
+    text: `Coastal cities are increasingly adopting layered flood defenses as sea levels rise. Engineers combine sea walls, wetland restoration, and improved drainage systems to reduce risk.
+
+Wetlands play a crucial role because they absorb wave energy and store excess water during storms. However, they require space and long-term maintenance.
+
+Planners emphasize that infrastructure alone is not enough. Early warning systems and community education programs are also necessary to minimize damage and protect lives.`,
+    questions: [
+      { id: 'c11-r2-q1', type: 'multiple_choice', question: 'What strategy do engineers use?', options: ['Single concrete wall only', 'Layered flood defenses', 'No intervention', 'Only private insurance'], correct: 1 },
+      { id: 'c11-r2-q2', type: 'multiple_choice', question: 'Why are wetlands valuable?', options: ['They increase storm speed', 'They absorb wave energy', 'They remove all pollution', 'They reduce tourism'], correct: 1 },
+      { id: 'c11-r2-q3', type: 'true_false_ng', question: 'Wetlands need no maintenance.', options: ['True', 'False', 'Not Given'], correct: 1 },
+      { id: 'c11-r2-q4', type: 'multiple_choice', question: 'What else is needed besides infrastructure?', options: ['Community education and warnings', 'More shopping centers', 'Less drainage', 'Fewer safety drills'], correct: 0 },
+      { id: 'c11-r2-q5', type: 'multiple_choice', question: 'The passage mainly discusses:', options: ['Airport design', 'Flood adaptation planning', 'Forest tourism', 'Fuel taxes'], correct: 1 },
+    ],
+  },
+  {
+    id: 'c11-r3',
+    title: 'Passage 3 — Sleep, Memory, and Learning',
+    text: `Research in cognitive science suggests that sleep is essential for memory consolidation. During certain sleep stages, the brain processes information acquired during the day and strengthens neural connections.
+
+Studies show that students who maintain consistent sleep schedules often perform better on complex tasks than those who rely on late-night study sessions. Sleep deprivation can reduce attention span and slow decision-making.
+
+Experts recommend combining structured revision with healthy sleep routines, rather than trading sleep for extra study time.`,
+    questions: [
+      { id: 'c11-r3-q1', type: 'multiple_choice', question: 'What does sleep help with?', options: ['Memory consolidation', 'Muscle growth only', 'Language loss', 'Visual decline'], correct: 0 },
+      { id: 'c11-r3-q2', type: 'multiple_choice', question: 'Who tends to perform better?', options: ['Students with regular sleep schedules', 'Students with no sleep', 'Students who skip revision', 'Students with random schedules'], correct: 0 },
+      { id: 'c11-r3-q3', type: 'true_false_ng', question: 'Sleep deprivation can reduce attention span.', options: ['True', 'False', 'Not Given'], correct: 0 },
+      { id: 'c11-r3-q4', type: 'multiple_choice', question: 'Experts recommend:', options: ['Trading sleep for study time', 'Structured revision plus healthy sleep', 'Only sleeping and no revision', 'Studying only at night'], correct: 1 },
+      { id: 'c11-r3-q5', type: 'multiple_choice', question: 'The main idea is that sleep is:', options: ['Optional for learning', 'Central to effective learning', 'Unrelated to memory', 'Only useful for athletes'], correct: 1 },
+    ],
+  },
+]
+
 export const IELTS_WRITING_TASKS = [
   {
     id: 'ielts-w1',
@@ -471,6 +861,102 @@ export const TEST_CATALOG = [
     premium: false,
   },
   {
+    id: 'ielts-cambridge-library-listening',
+    type: 'IELTS',
+    title: 'Cambridge IELTS Listening 1-19',
+    level: 'A2 - C2',
+    sections: ['Listening'],
+    totalTime: 30,
+    questions: 40,
+    description: 'Cambridge seriyasi bo\'yicha test tanlash oynasi.',
+    difficulty: 'Mixed',
+    premium: false,
+  },
+  {
+    id: 'ielts-cambridge-library-reading',
+    type: 'IELTS',
+    title: 'Cambridge IELTS Reading 1-19',
+    level: 'A2 - C2',
+    sections: ['Reading'],
+    totalTime: 60,
+    questions: 40,
+    description: 'Cambridge seriyasi bo\'yicha reading test tanlash oynasi.',
+    difficulty: 'Mixed',
+    premium: false,
+  },
+  {
+    id: 'ielts-c11-listening-original',
+    type: 'IELTS',
+    title: 'Cambridge IELTS Test 11 — Listening (Original Pack)',
+    level: 'B1 - C2',
+    sections: ['Listening'],
+    totalTime: 30,
+    questions: 40,
+    description: '4 sectionli original IELTS-style listening practice (copyright-safe).',
+    difficulty: 'Intermediate',
+    premium: false,
+  },
+  {
+    id: 'ielts-c11-reading-original',
+    type: 'IELTS',
+    title: 'Cambridge IELTS Test 11 — Reading (Original Pack)',
+    level: 'B1 - C2',
+    sections: ['Reading'],
+    totalTime: 60,
+    questions: 40,
+    description: '3 passageli original IELTS-style reading practice (copyright-safe).',
+    difficulty: 'Intermediate',
+    premium: false,
+  },
+  {
+    id: 'ielts-listening-original-1',
+    type: 'IELTS',
+    title: 'IELTS Listening — Original Mock Pack 1',
+    level: 'B1 - C1',
+    sections: ['Listening'],
+    totalTime: 30,
+    questions: 10,
+    description: 'Original IELTS-style listening mashqi (2 section + audio player).',
+    difficulty: 'Intermediate',
+    premium: false,
+  },
+  {
+    id: 'ielts-reading-original-1',
+    type: 'IELTS',
+    title: 'IELTS Reading — Original Mock Pack 1',
+    level: 'B1 - C1',
+    sections: ['Reading'],
+    totalTime: 60,
+    questions: 10,
+    description: 'Original IELTS-style reading mashqi (2 passage, 10 savol).',
+    difficulty: 'Intermediate',
+    premium: false,
+  },
+  {
+    id: 'ielts-writing-original-1',
+    type: 'IELTS',
+    title: 'IELTS Writing — Original Mock Pack 1',
+    level: 'B1 - C2',
+    sections: ['Writing'],
+    totalTime: 60,
+    questions: 2,
+    description: 'Original IELTS-style Writing Task 1 + Task 2.',
+    difficulty: 'Intermediate',
+    premium: false,
+  },
+  {
+    id: 'ielts-speaking-original-1',
+    type: 'IELTS',
+    title: 'IELTS Speaking — Original Mock Pack 1',
+    level: 'B1 - C2',
+    sections: ['Speaking'],
+    totalTime: 15,
+    questions: 3,
+    description: 'Original IELTS-style speaking parts (Part 1, 2, 3).',
+    difficulty: 'Intermediate',
+    premium: false,
+  },
+  {
     id: 'ielts-writing-1',
     type: 'IELTS',
     title: 'IELTS Writing — Task 1 + Task 2',
@@ -528,6 +1014,30 @@ export function getTestById(id) {
 
 export function getTestQuestions(testId) {
   switch (testId) {
+    case 'ielts-cambridge-library-listening':
+      return {
+        type: 'library',
+        mode: 'listening',
+        tests: IELTS_CAMBRIDGE_LISTENING_LIBRARY,
+      }
+    case 'ielts-c11-listening-original':
+      return {
+        type: 'listening',
+        sections: IELTS_C11_ORIGINAL_LISTENING_SECTIONS,
+        allQuestions: IELTS_C11_ORIGINAL_LISTENING_SECTIONS.flatMap((s) => s.questions),
+      }
+    case 'ielts-cambridge-library-reading':
+      return {
+        type: 'library',
+        mode: 'reading',
+        tests: IELTS_CAMBRIDGE_READING_LIBRARY,
+      }
+    case 'ielts-c11-reading-original':
+      return {
+        type: 'reading',
+        passages: IELTS_C11_ORIGINAL_READING_PASSAGES,
+        allQuestions: IELTS_C11_ORIGINAL_READING_PASSAGES.flatMap((p) => p.questions),
+      }
     case 'ielts-reading-1':
       return {
         type: 'reading',
@@ -540,10 +1050,32 @@ export function getTestQuestions(testId) {
         sections: IELTS_LISTENING_SECTIONS,
         allQuestions: IELTS_LISTENING_SECTIONS.flatMap((s) => s.questions),
       }
+    case 'ielts-listening-original-1':
+      return {
+        type: 'listening',
+        sections: IELTS_ORIGINAL_LISTENING_SECTIONS,
+        allQuestions: IELTS_ORIGINAL_LISTENING_SECTIONS.flatMap((s) => s.questions),
+      }
     case 'ielts-writing-1':
       return {
         type: 'writing',
         tasks: IELTS_WRITING_TASKS,
+      }
+    case 'ielts-reading-original-1':
+      return {
+        type: 'reading',
+        passages: IELTS_ORIGINAL_READING_PASSAGES,
+        allQuestions: IELTS_ORIGINAL_READING_PASSAGES.flatMap((p) => p.questions),
+      }
+    case 'ielts-writing-original-1':
+      return {
+        type: 'writing',
+        tasks: IELTS_ORIGINAL_WRITING_TASKS,
+      }
+    case 'ielts-speaking-original-1':
+      return {
+        type: 'speaking',
+        parts: IELTS_ORIGINAL_SPEAKING_PARTS,
       }
     case 'toefl-reading-1':
       return {

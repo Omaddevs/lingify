@@ -3,17 +3,30 @@ import { motion } from 'framer-motion'
 import { useUser } from '../context/UserContext'
 import AuthButtons from './AuthButtons'
 import LoginModal from './LoginModal'
+import NotificationPanel from './NotificationPanel'
 import SignupModal from './SignupModal'
 import UserAvatar from './UserAvatar'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 function Header({ title = 'Partner', subtitle = '', onRegisterClick }) {
   const { user, profile, logout, registerDemoUser } = useUser()
   const navigate = useNavigate()
   const [authModal, setAuthModal] = useState(null)
+  const [isNotificationsOpen, setNotificationsOpen] = useState(false)
   const isAuthenticated = !!user?.isAuthenticated
   const streak = user?.streak ?? 0
+  const notificationRef = useRef(null)
+
+  useEffect(() => {
+    function handleOutsideClick(event) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setNotificationsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [])
 
   return (
     <header className="mb-6 flex items-center justify-between gap-4">
@@ -42,14 +55,18 @@ function Header({ title = 'Partner', subtitle = '', onRegisterClick }) {
           </div>
         </div>
 
-        <motion.button
-          type="button"
-          aria-label="Open notifications"
-          whileHover={{ scale: 1.05 }}
-          className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 transition duration-300 hover:text-indigo-600"
-        >
-          <Bell size={18} aria-hidden="true" />
-        </motion.button>
+        <div className="relative" ref={notificationRef}>
+          <motion.button
+            type="button"
+            aria-label="Open notifications"
+            whileHover={{ scale: 1.05 }}
+            onClick={() => setNotificationsOpen((v) => !v)}
+            className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 transition duration-300 hover:text-indigo-600"
+          >
+            <Bell size={18} aria-hidden="true" />
+          </motion.button>
+          <NotificationPanel isOpen={isNotificationsOpen} onClose={() => setNotificationsOpen(false)} />
+        </div>
 
         <UserAvatar
           user={user}

@@ -24,8 +24,8 @@ const examTabs = ['IELTS', 'TOEFL', 'SAT', 'PTE']
 
 const examTypesMeta = {
   IELTS: [
-    { title: 'Listening', questions: '40 Savol', time: '30 daq', icon: Headphones, testId: 'ielts-listening-1' },
-    { title: 'Reading',   questions: '40 Savol', time: '60 daq', icon: BookCheck,  testId: 'ielts-reading-1' },
+    { title: 'Listening', questions: '40 Savol', time: '30 daq', icon: Headphones, testId: 'ielts-cambridge-library-listening' },
+    { title: 'Reading',   questions: '40 Savol', time: '60 daq', icon: BookCheck,  testId: 'ielts-cambridge-library-reading' },
     { title: 'Writing',   questions: '2 Topshiriq', time: '60 daq', icon: PenLine, testId: 'ielts-writing-1', premium: true },
     { title: 'Speaking',  questions: '3 Qism', time: '11-14 daq', icon: Mic, testId: null },
   ],

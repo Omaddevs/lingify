@@ -91,9 +91,256 @@ function ExerciseCard({ exercise, index, total, onAnswer }) {
 
 // ── Content section renderer ─────────────────────────────────────────────────
 function ContentSection({ section }) {
+  const [speakingLetter, setSpeakingLetter] = useState(null)
+  const lines = section.body.split('\n').filter(Boolean)
+  const upperLine = lines.find((line) => /A B C D E/.test(line))
+  const lowerLine = lines.find((line) => /a b c d e/.test(line))
+
+  const upperLetters = upperLine ? upperLine.split(/\s+/).filter((t) => /^[A-Z]$/.test(t)) : []
+  const lowerLetters = lowerLine ? lowerLine.split(/\s+/).filter((t) => /^[a-z]$/.test(t)) : []
+
+  const hasAlphabetGrid = upperLetters.length > 20 && lowerLetters.length > 20
+  const isVowelSection = /unli harflar|vowels/i.test(section.title)
+  const isExampleSection = /misol/i.test(section.title)
+  const isNumbersSection = /raqamlar|numbers/i.test(section.title)
+
+  function speakLetter(letter) {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(String(letter).toLowerCase())
+    utterance.lang = 'en-US'
+    utterance.rate = 0.9
+    utterance.pitch = 1
+    setSpeakingLetter(letter)
+    utterance.onend = () => setSpeakingLetter(null)
+    utterance.onerror = () => setSpeakingLetter(null)
+    window.speechSynthesis.speak(utterance)
+  }
+
+  if (hasAlphabetGrid) {
+    return (
+      <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+        <h4 className="mb-1 text-2xl font-semibold text-slate-900">{section.title}</h4>
+        <p className="mb-5 text-sm text-slate-500">Ingliz alifbosi</p>
+
+        <div className="space-y-5">
+          <div className="grid gap-3 md:grid-cols-[120px_1fr] md:items-start">
+            <span className="inline-flex h-7 w-fit items-center rounded-md bg-indigo-100 px-2 text-xs font-semibold text-indigo-700">Aa</span>
+            <div className="grid grid-cols-7 gap-2 sm:grid-cols-9 md:grid-cols-13">
+              {upperLetters.map((letter) => (
+                <button
+                  key={`upper-${letter}`}
+                  type="button"
+                  onClick={() => speakLetter(letter)}
+                  className={`grid h-9 place-items-center rounded-lg border bg-white text-sm font-semibold transition ${
+                    speakingLetter === letter
+                      ? 'border-indigo-500 text-indigo-700 shadow-sm'
+                      : 'border-slate-200 text-slate-700 hover:border-indigo-300 hover:text-indigo-600'
+                  }`}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-slate-200 pt-5" />
+
+          <div className="grid gap-3 md:grid-cols-[120px_1fr] md:items-start">
+            <span className="inline-flex h-7 w-fit items-center rounded-md bg-indigo-100 px-2 text-xs font-semibold text-indigo-700">Aa</span>
+            <div className="grid grid-cols-7 gap-2 sm:grid-cols-9 md:grid-cols-13">
+              {lowerLetters.map((letter) => (
+                <button
+                  key={`lower-${letter}`}
+                  type="button"
+                  onClick={() => speakLetter(letter)}
+                  className={`grid h-9 place-items-center rounded-lg border bg-white text-sm transition ${
+                    speakingLetter === letter
+                      ? 'border-indigo-500 text-indigo-700 shadow-sm'
+                      : 'border-slate-200 text-slate-700 hover:border-indigo-300 hover:text-indigo-600'
+                  }`}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isVowelSection) {
+    const vowels = ['A', 'E', 'I', 'O', 'U']
+    const consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z']
+
+    return (
+      <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+        <h4 className="mb-1 text-2xl font-semibold text-slate-900">{section.title}</h4>
+        <p className="mb-5 text-sm text-slate-500">Ingliz alifbosidagi asosiy tovush guruhlari</p>
+
+        <div className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
+          <article className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-indigo-700">Unli harflar</p>
+            <p className="mt-1 text-xs text-indigo-700/80">Vowels — ovoz erkin chiqadigan harflar</p>
+            <div className="mt-3 grid grid-cols-5 gap-2">
+              {vowels.map((letter) => (
+                <button
+                  key={`vowel-${letter}`}
+                  type="button"
+                  onClick={() => speakLetter(letter)}
+                  className={`grid h-10 place-items-center rounded-lg border bg-white text-sm font-bold transition ${
+                    speakingLetter === letter
+                      ? 'border-indigo-500 text-indigo-700 shadow-sm'
+                      : 'border-indigo-200 text-indigo-700 hover:border-indigo-400'
+                  }`}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
+          </article>
+
+          <article className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">Undoshlar</p>
+            <p className="mt-1 text-xs text-slate-500">Consonants — qolgan 21 ta harf</p>
+            <div className="mt-3 grid grid-cols-7 gap-1.5">
+              {consonants.map((letter) => (
+                <button
+                  key={`cons-${letter}`}
+                  type="button"
+                  onClick={() => speakLetter(letter)}
+                  className={`grid h-7 place-items-center rounded-md border text-xs transition ${
+                    speakingLetter === letter
+                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                      : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-indigo-300 hover:text-indigo-600'
+                  }`}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
+          </article>
+        </div>
+      </div>
+    )
+  }
+
+  if (isExampleSection) {
+    const parsedExamples = section.body
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const [wordPart, descPart] = line.split('→').map((x) => x?.trim())
+        const letter = wordPart?.[0]?.toUpperCase() || '?'
+        return {
+          word: wordPart || line,
+          desc: descPart || '',
+          letter,
+        }
+      })
+
+    return (
+      <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+        <h4 className="mb-1 text-2xl font-semibold text-slate-900">{section.title}</h4>
+        <p className="mb-5 text-sm text-slate-500">So&apos;zlar qanday harf bilan boshlanishini ko&apos;ramiz</p>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          {parsedExamples.map((item) => (
+            <button
+              key={`${item.word}-${item.letter}`}
+              type="button"
+              onClick={() => speakLetter(item.letter)}
+              className={`group rounded-xl border bg-white p-4 text-left transition hover:border-indigo-300 hover:shadow-sm ${
+                speakingLetter === item.letter ? 'border-indigo-500 shadow-sm' : 'border-slate-200'
+              }`}
+            >
+              <div className="mb-3 flex items-center gap-2">
+                <span
+                  className={`grid h-8 w-8 place-items-center rounded-lg text-sm font-bold ${
+                    speakingLetter === item.letter ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-700'
+                  }`}
+                >
+                  {item.letter}
+                </span>
+                <p className="text-lg font-semibold text-slate-900">{item.word}</p>
+              </div>
+              <p className="text-xs text-slate-500">{item.desc}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (isNumbersSection) {
+    function numberToWord(n) {
+      const under20 = [
+        '', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
+        'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
+        'seventeen', 'eighteen', 'nineteen',
+      ]
+      const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
+      if (n <= 19) return under20[n]
+      if (n === 100) return 'one hundred'
+      const t = Math.floor(n / 10)
+      const u = n % 10
+      return u ? `${tens[t]}-${under20[u]}` : tens[t]
+    }
+
+    const chunks = []
+    for (let start = 1; start <= 100; start += 20) {
+      const end = Math.min(start + 19, 100)
+      chunks.push({
+        title: `${start} - ${end}`,
+        data: Array.from({ length: end - start + 1 }, (_, i) => {
+          const num = start + i
+          return { num, word: numberToWord(num) }
+        }),
+      })
+    }
+
+    const NumberGrid = ({ title, data }) => (
+      <article className="rounded-xl border border-slate-200 bg-white p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">{title}</p>
+        <div className="mt-3 grid grid-cols-4 gap-1.5 sm:grid-cols-6 md:grid-cols-8 xl:grid-cols-10">
+          {data.map((item) => (
+            <button
+              key={`${item.num}-${item.word}`}
+              type="button"
+              onClick={() => speakLetter(item.word)}
+              className={`rounded-md border px-1.5 py-1.5 text-left transition ${
+                speakingLetter === item.word
+                  ? 'border-indigo-500 bg-indigo-50'
+                  : 'border-slate-200 bg-slate-50 hover:border-indigo-300 hover:bg-indigo-50/60'
+              }`}
+            >
+              <p className="text-xs font-bold leading-none text-slate-900">{item.num}</p>
+              <p className="mt-1 text-[10px] leading-none text-slate-600">{item.word}</p>
+            </button>
+          ))}
+        </div>
+      </article>
+    )
+
+    return (
+      <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+        <h4 className="mb-1 text-2xl font-semibold text-slate-900">Raqamlar 1-100</h4>
+        <p className="mb-5 text-sm text-slate-500">Raqamni bosing — inglizcha talaffuz qilib beradi</p>
+
+        <div className="grid gap-4">
+          {chunks.map((chunk) => (
+            <NumberGrid key={chunk.title} title={chunk.title} data={chunk.data} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-      <h4 className="mb-3 font-semibold text-slate-900">{section.title}</h4>
+      <h4 className="mb-3 text-lg font-semibold text-slate-900">{section.title}</h4>
       <pre className="whitespace-pre-wrap font-sans text-sm leading-7 text-slate-700">
         {section.body}
       </pre>
@@ -203,6 +450,7 @@ function LessonPlayerPage() {
   const sections = lesson.content.sections || []
   const exercises = lesson.content.exercises || []
   const totalSections = sections.length
+  const isNumberLesson = /raqam/i.test(lesson.title)
 
   const LEVEL_COLORS = {
     A0: 'bg-slate-100 text-slate-600',
@@ -254,7 +502,7 @@ function LessonPlayerPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Top bar */}
-      <div className="sticky top-0 z-30 border-b border-slate-200 bg-white px-4 py-3 shadow-sm">
+      <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-2 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center gap-4">
           <button
             type="button"
@@ -282,42 +530,52 @@ function LessonPlayerPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl px-4 py-8">
+      <div className="mx-auto max-w-[1320px] px-4 py-8">
         {/* Lesson header */}
-        <div className="mb-6 flex items-start gap-4">
+        <div className="mb-6 flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="flex items-start gap-3">
           <button
             type="button"
             onClick={() => navigate('/online-lessons')}
-            className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"
+            className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50"
           >
             <ArrowLeft size={18} />
           </button>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${LEVEL_COLORS[lesson.level]}`}>
+              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${LEVEL_COLORS[lesson.level]}`}>
                 {lesson.level}
               </span>
-              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
                 {TYPE_LABELS[lesson.type] || lesson.type}
               </span>
-              <span className="flex items-center gap-1 text-xs text-slate-400">
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-500">
                 <Clock size={11} />
                 {lesson.duration}
               </span>
               {alreadyDone && (
-                <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600">
                   <CheckCircle2 size={11} />
                   Bajarilgan
                 </span>
               )}
             </div>
-            <h1 className="mt-2 text-2xl font-bold text-slate-900">{lesson.title}</h1>
-            <p className="mt-1 text-sm text-slate-500">{lesson.description}</p>
+            <h1 className="mt-3 text-[36px] leading-none font-bold tracking-tight text-slate-900">{lesson.title}</h1>
+            <p className="mt-2 text-base text-slate-500">{lesson.description}</p>
           </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/online-lessons')}
+            className="hidden h-11 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100 md:inline-flex"
+          >
+            <BookOpen size={15} />
+            Darslar ro&apos;yxati
+          </button>
         </div>
 
         {/* Main card */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+        <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm md:p-7">
           <AnimatePresence mode="wait">
             {/* CONTENT PHASE */}
             {phase === 'content' && (
@@ -327,22 +585,40 @@ function LessonPlayerPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -30 }}
               >
-                <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
+                <div className="mb-5 flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
                     <BookOpen size={18} />
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-slate-500">
-                      Qism {sectionIdx + 1} / {totalSections}
-                    </p>
-                    <p className="text-sm font-semibold text-slate-800">
+                    {!isNumberLesson ? (
+                      <p className="text-xs font-medium text-slate-500">
+                        Qism {sectionIdx + 1} / {totalSections}
+                      </p>
+                    ) : null}
+                    <p className="text-[28px] leading-none font-semibold text-slate-900">
                       {sections[sectionIdx]?.title}
                     </p>
                   </div>
                 </div>
+                  <div className="hidden items-center gap-2 md:flex">
+                    {sections.map((_, i) => (
+                      <span
+                        key={`step-${i}`}
+                        className={`grid h-7 w-7 place-items-center rounded-full border text-xs font-semibold ${
+                          i <= sectionIdx
+                            ? 'border-indigo-500 bg-indigo-500 text-white'
+                            : 'border-slate-200 bg-white text-slate-400'
+                        }`}
+                      >
+                        {i + 1}
+                      </span>
+                    ))}
+                  </div>
+                </div>
 
                 {sectionIdx === 0 && lesson.content.intro && (
-                  <div className="mb-4 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-800">
+                  <div className="mb-4 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-900">
                     {lesson.content.intro}
                   </div>
                 )}
@@ -351,7 +627,7 @@ function LessonPlayerPage() {
                   <ContentSection section={sections[sectionIdx]} />
                 )}
 
-                <div className="mt-8 flex items-center justify-between">
+                <div className="mt-7 flex items-center justify-between rounded-2xl border border-slate-100 bg-white px-1 py-1">
                   <button
                     type="button"
                     onClick={() => setSectionIdx((i) => Math.max(0, i - 1))}
@@ -362,19 +638,17 @@ function LessonPlayerPage() {
                     Oldingi
                   </button>
 
-                  <div className="flex gap-1.5">
-                    {sections.map((_, i) => (
-                      <span
-                        key={i}
-                        className={`h-2 rounded-full transition-all ${
-                          i === sectionIdx
-                            ? 'w-6 bg-indigo-500'
-                            : i < sectionIdx
-                            ? 'w-2 bg-indigo-300'
-                            : 'w-2 bg-slate-200'
-                        }`}
+                  <div className="hidden min-w-[220px] flex-col items-center gap-1 md:flex">
+                    <div className="h-2 w-full rounded-full bg-slate-100">
+                      <motion.div
+                        initial={false}
+                        animate={{ width: `${((sectionIdx + 1) / totalSections) * 100}%` }}
+                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-indigo-700"
                       />
-                    ))}
+                    </div>
+                    <p className="text-xs font-medium text-slate-500">
+                      {sectionIdx + 1} / {totalSections} qism
+                    </p>
                   </div>
 
                   <button
@@ -386,7 +660,7 @@ function LessonPlayerPage() {
                         setPhase('quiz')
                       }
                     }}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg"
                   >
                     {sectionIdx < totalSections - 1 ? (
                       <>

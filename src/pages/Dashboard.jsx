@@ -1,7 +1,20 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { BookOpenCheck, Bot, ChartColumnBig, Flame, Trophy, UsersRound, Zap } from 'lucide-react'
+import {
+  BookOpenCheck,
+  Bot,
+  Calendar,
+  ChartColumnBig,
+  CirclePlay,
+  Flame,
+  GraduationCap,
+  MessagesSquare,
+  Target,
+  Trophy,
+  UsersRound,
+  Zap,
+} from 'lucide-react'
 import BottomPanels from '../components/Cards/BottomPanels'
 import LearningModules from '../components/Cards/LearningModules'
 import MobileBottomNav from '../components/Cards/MobileBottomNav'
@@ -133,32 +146,165 @@ function PersonalizedDashboard() {
     },
   ]
 
+  const firstName = user?.name?.split(' ')[0] || 'Omadbek'
+
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-5 md:px-6">
       <div className="flex w-full gap-5">
         <Sidebar recommendedItem="Partner" />
 
         <main className="min-h-[calc(100vh-40px)] w-full rounded-[20px] border border-slate-200 bg-white p-4 shadow-md md:p-6">
-          <Header
-            title={`${greeting}, ${user?.name?.split(' ')[0] || 'Asadbek'} 👋`}
-            subtitle="Bugungi rejangiz tayyor. Davom eting!"
-          />
-
-          {/* Real stats */}
-          <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {quickStats.map(({ label, value, icon: Icon, color, sub }) => (
-              <article key={label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                <div className={`mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg ${color}`}>
-                  <Icon size={15} />
+          <div className="md:hidden">
+            <section className="space-y-4 pb-24">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-indigo-500 bg-indigo-100">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt="avatar" className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="grid h-full w-full place-items-center text-sm font-bold text-indigo-700">
+                        {firstName[0]}
+                      </div>
+                    )}
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 rounded-full bg-indigo-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                    B1
+                  </span>
                 </div>
-                <p className="text-2xl font-bold text-slate-900">{value}</p>
-                <p className="text-xs text-slate-400">{sub}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-2xl font-bold text-slate-900">
+                    {greeting}, {firstName} 👋
+                  </p>
+                  <p className="text-sm text-slate-500">Bugungi rejangiz tayyor. Davom eting!</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {quickStats.map(({ label, value, icon: Icon, color, sub }) => (
+                  <article key={label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className={`mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg ${color}`}>
+                      <Icon size={15} />
+                    </div>
+                    <p className="text-3xl font-bold leading-none text-slate-900">{value}</p>
+                    <p className="mt-2 text-sm font-medium text-slate-700">{sub}</p>
+                  </article>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <article className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                  <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                    <Calendar size={14} />
+                  </div>
+                  <p className="text-xs font-semibold text-slate-400">KUNLIK REJA</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-800">Lug'at: {dueCount} so'z</p>
+                  <p className="text-sm text-slate-700">Dars: Ingliz alifbosi</p>
+                </article>
+                <article className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                  <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                    <CirclePlay size={14} />
+                  </div>
+                  <p className="text-xs font-semibold text-slate-400">DAVOM ETISH</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-800 line-clamp-2">
+                    {nextLesson?.title || 'Ingliz alifbosi'}
+                  </p>
+                  {nextLesson && (
+                    <button
+                      onClick={() => navigate(`/lessons/${nextLesson.id}`)}
+                      className="mt-1 text-xs font-medium text-indigo-600"
+                    >
+                      Davom etish →
+                    </button>
+                  )}
+                </article>
+                <article className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                  <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                    <MessagesSquare size={14} />
+                  </div>
+                  <p className="text-xs font-semibold text-slate-400">FLASHCARD</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-800">1 ta so'z bugun</p>
+                  <button
+                    onClick={() => navigate('/flashcards')}
+                    className="mt-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white"
+                  >
+                    Boshlash
+                  </button>
+                </article>
+              </div>
+
+              <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">Your level</p>
+                <div className="mt-2 grid grid-cols-[1fr_1fr] items-center gap-3">
+                  <div>
+                    <p className="text-4xl font-bold text-slate-900">B1</p>
+                    <p className="text-sm text-slate-500">Intermediate</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-500">Target score</p>
+                    <p className="text-3xl font-bold text-slate-900">IELTS 7.0</p>
+                    <p className="text-sm text-slate-500">in 6 months</p>
+                  </div>
+                </div>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-full w-[45%] rounded-full bg-indigo-600" />
+                </div>
+                <p className="mt-1 text-right text-xs text-slate-400">45% Completed</p>
               </article>
-            ))}
+
+              <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">Bugungi reja</p>
+                  <Target size={14} className="text-indigo-500" />
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                    <span className="flex items-center gap-2"><GraduationCap size={14} className="text-indigo-500" />Speaking Practice</span>
+                    <span className="text-slate-500">15 min</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                    <span className="flex items-center gap-2"><BookOpenCheck size={14} className="text-emerald-500" />Vocabulary</span>
+                    <span className="text-slate-500">20 words</span>
+                  </div>
+                </div>
+                <button className="mt-3 w-full rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 py-2.5 text-sm font-semibold text-white">
+                  Start Now
+                </button>
+              </article>
+
+              <article className="rounded-2xl border border-indigo-100 bg-indigo-50 p-4 shadow-sm">
+                <p className="text-2xl font-semibold text-slate-900">Find a study partner</p>
+                <p className="text-sm text-slate-600">Practice speaking and improve together.</p>
+                <button
+                  onClick={() => navigate('/partner')}
+                  className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
+                >
+                  Find Partner
+                </button>
+              </article>
+            </section>
           </div>
 
-          {/* Action cards */}
-          <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="hidden md:block">
+            <Header
+              title={`${greeting}, ${user?.name?.split(' ')[0] || 'Asadbek'} 👋`}
+              subtitle="Bugungi rejangiz tayyor. Davom eting!"
+            />
+
+            {/* Real stats */}
+            <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {quickStats.map(({ label, value, icon: Icon, color, sub }) => (
+                <article key={label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className={`mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg ${color}`}>
+                    <Icon size={15} />
+                  </div>
+                  <p className="text-2xl font-bold text-slate-900">{value}</p>
+                  <p className="text-xs text-slate-400">{sub}</p>
+                </article>
+              ))}
+            </div>
+
+            {/* Action cards */}
+            <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <p className="text-sm text-slate-500">Kunlik reja</p>
               <p className="mt-2 text-sm font-semibold text-slate-800">Lug'at: {dueCount} so'z takrorlash</p>
@@ -202,9 +348,9 @@ function PersonalizedDashboard() {
                 Testga borish →
               </button>
             </article>
-          </div>
+            </div>
 
-          <div className="space-y-4 pb-20 xl:pb-0">
+            <div className="space-y-4 pb-20 xl:pb-0">
             <OverviewCards />
             <PartnerLessonSection />
             <LearningModules />
@@ -218,6 +364,7 @@ function PersonalizedDashboard() {
                 <p className="font-semibold text-emerald-800">Learn your first 10 words</p>
                 <p className="text-sm text-emerald-700">Build daily momentum with quick vocabulary drills.</p>
               </article>
+            </div>
             </div>
           </div>
         </main>

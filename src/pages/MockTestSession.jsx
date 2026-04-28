@@ -21,9 +21,6 @@ import {
   getTestById,
   getTestQuestions,
   saveTestResult,
-  IELTS_READING_PASSAGES,
-  IELTS_LISTENING_SECTIONS,
-  IELTS_WRITING_TASKS,
 } from '../data/mockTests'
 
 // ── Countdown Timer ──────────────────────────────────────────────────────────
@@ -199,13 +196,37 @@ function ReadingSection({ passages, answers, onAnswer }) {
 
 // ── Listening section ────────────────────────────────────────────────────────
 function ListeningSection({ sections, answers, onAnswer }) {
+  const [activeSection, setActiveSection] = useState(0)
   const [showTranscript, setShowTranscript] = useState(false)
-  const section = sections[0]
+  const section = sections[activeSection]
   const answered = Object.keys(answers).length
+  const allQuestions = sections.flatMap((s) => s.questions)
+  const questionOffset = sections
+    .slice(0, activeSection)
+    .reduce((sum, s) => sum + s.questions.length, 0)
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_480px]">
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mb-4 flex flex-wrap gap-2">
+          {sections.map((s, i) => (
+            <button
+              key={s.id}
+              onClick={() => {
+                setActiveSection(i)
+                setShowTranscript(false)
+              }}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                activeSection === i
+                  ? 'bg-sky-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              Section {s.section}
+            </button>
+          ))}
+        </div>
+
         <div className="mb-4 flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100">
             <Headphones size={18} className="text-sky-600" />
@@ -218,9 +239,15 @@ function ListeningSection({ sections, answers, onAnswer }) {
 
         <div className="rounded-2xl border border-sky-100 bg-sky-50 p-5">
           <p className="text-sm font-medium text-sky-800">{section.audioDescription}</p>
-          <p className="mt-2 text-xs text-sky-600">
-            🎧 Haqiqiy testda audio fayl eshitiladi. Bu amaliyot versiyasida transcript ko'rsatiladi.
-          </p>
+          {section.audioUrl ? (
+            <audio controls src={section.audioUrl} className="mt-3 w-full">
+              Brauzeringiz audio elementini qo'llab-quvvatlamaydi.
+            </audio>
+          ) : (
+            <p className="mt-2 text-xs text-sky-600">
+              🎧 Audio topilmadi. Transcript orqali mashq qilishingiz mumkin.
+            </p>
+          )}
         </div>
 
         <button
@@ -242,7 +269,7 @@ function ListeningSection({ sections, answers, onAnswer }) {
       <div>
         <div className="mb-4 flex items-center justify-between rounded-xl bg-sky-50 p-3">
           <p className="text-sm font-semibold text-sky-800">
-            {answered}/{section.questions.length} savol javoblandi
+            {answered}/{allQuestions.length} savol javoblandi
           </p>
         </div>
         <div className="max-h-[65vh] overflow-y-auto pr-1">
@@ -250,7 +277,7 @@ function ListeningSection({ sections, answers, onAnswer }) {
             <MCQQuestion
               key={q.id}
               question={q}
-              index={i}
+              index={questionOffset + i}
               answer={answers[q.id]}
               onSelect={onAnswer}
             />
@@ -338,7 +365,7 @@ function WritingSection({ tasks, answers, onAnswer }) {
 }
 
 // ── Speaking section ─────────────────────────────────────────────────────────
-function SpeakingSection() {
+function SpeakingSection({ parts = [] }) {
   const [recording, setRecording] = useState(false)
   const [recordings, setRecordings] = useState({})
 
@@ -381,6 +408,79 @@ function SpeakingSection() {
         {recordings['s1'] && (
           <p className="mt-3 text-sm text-emerald-600">✅ Speaking javobingiz saqlandi</p>
         )}
+      </div>
+
+      {parts.length > 0 && (
+        <div className="space-y-4">
+          {parts.map((part) => (
+            <div key={part.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="mb-2 flex items-center justify-between">
+                <h4 className="text-sm font-bold text-slate-900">{part.title}</h4>
+                <span className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600">
+                  {part.duration}
+                </span>
+              </div>
+              {part.cueCard ? (
+                <div className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-sm font-semibold text-slate-800">{part.cueCard.topic}</p>
+                  <div className="mt-2 space-y-1">
+                    {part.cueCard.points.map((point) => (
+                      <p key={point} className="text-xs text-slate-600">• {point}</p>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {part.questions?.map((question) => (
+                    <p key={question} className="text-sm text-slate-700">• {question}</p>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function LibrarySection({ tests = [], mode, navigate }) {
+  const heading = mode === 'listening' ? 'Listening' : 'Reading'
+  const startTest = (test) => {
+    if (!test.available) return
+    navigate(`/mock-test/${test.id}`)
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-4">
+        <p className="text-sm font-semibold text-indigo-800">
+          Cambridge IELTS {heading} Test 1-19
+        </p>
+        <p className="mt-1 text-xs text-indigo-600">
+          Test 11 hozir to'liq ishlaydi (original, copyright-safe). Qolgan testlar bosqichma-bosqich qo'shiladi.
+        </p>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {tests.map((test) => (
+          <article key={test.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="text-sm font-bold text-slate-900">{test.title}</p>
+            <p className="mt-1 text-xs text-slate-500">{test.questions} savol · {test.time} daqiqa</p>
+            <p className="mt-2 min-h-8 text-xs text-slate-500">{test.description}</p>
+            <button
+              onClick={() => startTest(test)}
+              disabled={!test.available}
+              className={`mt-3 w-full rounded-lg border py-2 text-xs font-semibold transition ${
+                test.available
+                  ? 'border-indigo-200 text-indigo-700 hover:bg-indigo-50'
+                  : 'border-slate-200 bg-slate-100 text-slate-400'
+              }`}
+            >
+              {test.available ? 'Testni ochish' : 'Tez orada'}
+            </button>
+          </article>
+        ))}
       </div>
     </div>
   )
@@ -540,6 +640,7 @@ function MockTestSession() {
     listening: Headphones,
     writing: PenLine,
     speaking: Mic,
+    library: BookOpen,
     mcq: CheckCircle2,
   }
   const SectionIcon = SECTION_ICONS[testData.type] || BookOpen
@@ -716,7 +817,10 @@ function MockTestSession() {
             ))}
           </div>
         )}
-        {testData.type === 'speaking' && <SpeakingSection />}
+        {testData.type === 'speaking' && <SpeakingSection parts={testData.parts} />}
+        {testData.type === 'library' && (
+          <LibrarySection tests={testData.tests} mode={testData.mode} navigate={navigate} />
+        )}
 
         <div className="mt-6 flex justify-end">
           <button
