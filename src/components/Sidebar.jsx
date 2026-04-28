@@ -1,22 +1,32 @@
 import {
-  BookOpenCheck, ChartNoAxesColumn, FileCheck2, Handshake,
-  House, MessageCircleMore, Settings, Video,
+  BookOpenCheck, ChartNoAxesColumn, FileCheck2, GraduationCap, Handshake,
+  House, LayoutDashboard, Lock, MessageCircleMore, Settings, Trophy, Video,
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import logo1 from '../images/logo2.png'
+import { useUser } from '../context/UserContext'
 
-const menuItems = [
-  { name: 'Home',          icon: House,            path: '/' },
-  { name: 'Partner',       icon: Handshake,        path: '/partner' },
-  { name: 'Online Lessons', icon: Video,           path: '/online-lessons' },
-  { name: 'Mock Exam',     icon: FileCheck2,       path: '/mock-exam' },
-  { name: 'Progress',      icon: ChartNoAxesColumn, path: '/progress' },
-  { name: 'Messages',      icon: MessageCircleMore, path: '/messages' },
-  { name: 'Vocabulary',    icon: BookOpenCheck,    path: '/vocabulary' },
-  { name: 'Settings',      icon: Settings,         path: '/settings' },
+const BASE_ITEMS = [
+  { name: 'Home',           icon: House,             path: '/' },
+  { name: 'Partner',        icon: Handshake,         path: '/partner' },
+  { name: 'Online Lessons', icon: Video,             path: '/online-lessons' },
+  { name: 'Mock Exam',      icon: FileCheck2,        path: '/mock-exam' },
+  { name: 'O\'qituvchilar', icon: GraduationCap,     path: '/teachers' },
+  { name: 'Progress',       icon: ChartNoAxesColumn, path: '/progress' },
+  { name: 'Leaderboard',    icon: Trophy,            path: '/leaderboard' },
+  { name: 'Messages',       icon: MessageCircleMore, path: '/messages' },
+  { name: 'Vocabulary',     icon: BookOpenCheck,     path: '/vocabulary' },
+  { name: 'Settings',       icon: Settings,          path: '/settings' },
 ]
 
-function Sidebar() {
+const TEACHER_ITEM = { name: 'Mening Darslarim', icon: LayoutDashboard, path: '/teacher-dashboard' }
+
+function Sidebar({ locked = false, onLockedClick, recommendedItem }) {
+  const { user } = useUser()
+  const isTeacher = user?.role === 'teacher'
+  const menuItems = isTeacher
+    ? [BASE_ITEMS[0], TEACHER_ITEM, ...BASE_ITEMS.slice(1)]
+    : BASE_ITEMS
   return (
     <aside
       aria-label="Main navigation"
@@ -30,20 +40,34 @@ function Sidebar() {
         <ul className="space-y-2">
           {menuItems.map(({ name, icon: Icon, path }) => (
             <li key={name}>
-              <NavLink
-                to={path}
-                end={path === '/'}
-                className={({ isActive }) =>
-                  `flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-all ${
-                    isActive
-                      ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 text-white shadow-md'
-                      : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'
-                  }`
-                }
-              >
-                <Icon size={17} aria-hidden="true" />
-                <span>{name}</span>
-              </NavLink>
+              {locked ? (
+                <button
+                  type="button"
+                  onClick={onLockedClick}
+                  className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-500 transition-all hover:bg-indigo-50"
+                >
+                  <span className="inline-flex items-center gap-3">
+                    <Icon size={17} aria-hidden="true" />
+                    <span className="blur-[0.3px]">{name}</span>
+                  </span>
+                  <Lock size={14} className="text-slate-400" />
+                </button>
+              ) : (
+                <NavLink
+                  to={path}
+                  end={path === '/'}
+                  className={({ isActive }) =>
+                    `flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-all ${
+                      isActive
+                        ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 text-white shadow-md'
+                        : `text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 ${recommendedItem === name ? 'border border-indigo-200 bg-indigo-50/60 text-indigo-700' : ''}`
+                    }`
+                  }
+                >
+                  <Icon size={17} aria-hidden="true" />
+                  <span>{name}</span>
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>

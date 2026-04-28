@@ -1,10 +1,19 @@
 import { Bell, Flame } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useUser } from '../context/UserContext'
-import Avatar from './Avatar'
+import AuthButtons from './AuthButtons'
+import LoginModal from './LoginModal'
+import SignupModal from './SignupModal'
+import UserAvatar from './UserAvatar'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Header({ title = 'Partner', subtitle = '', onRegisterClick }) {
-  const { user } = useUser()
+  const { user, profile, logout, registerDemoUser } = useUser()
+  const navigate = useNavigate()
+  const [authModal, setAuthModal] = useState(null)
+  const isAuthenticated = !!user?.isAuthenticated
+  const streak = user?.streak ?? 0
 
   return (
     <header className="mb-6 flex items-center justify-between gap-4">
@@ -14,23 +23,21 @@ function Header({ title = 'Partner', subtitle = '', onRegisterClick }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onRegisterClick}
-          className="hidden h-10 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-bold text-white shadow-lg shadow-indigo-100 transition duration-300 hover:bg-indigo-700 sm:flex"
-        >
-          Sign Up
-        </motion.button>
+        <AuthButtons
+          isAuthenticated={isAuthenticated}
+          onSignIn={() => setAuthModal('login')}
+          onSignUp={() => setAuthModal('signup')}
+          onGoToApp={() => navigate('/')}
+        />
 
         {/* Streak badge */}
         <div
-          aria-label={`${user.streak}-day streak`}
+          aria-label={`${streak}-day streak`}
           className="hidden items-center gap-2 rounded-2xl border border-orange-100 bg-white px-3 py-2 text-sm shadow-sm sm:flex"
         >
           <Flame size={16} className="text-orange-500" aria-hidden="true" />
           <div>
-            <p className="font-semibold text-slate-900">{user.streak}</p>
+            <p className="font-semibold text-slate-900">{streak}</p>
             <p className="text-xs text-slate-500">Day streak</p>
           </div>
         </div>
@@ -44,14 +51,30 @@ function Header({ title = 'Partner', subtitle = '', onRegisterClick }) {
           <Bell size={18} aria-hidden="true" />
         </motion.button>
 
-        {/* Avatar — initials fallback, no external dependency at runtime */}
-        <Avatar
-          src={user.avatar}
-          name={user.name ?? 'User'}
-          size={40}
-          className="border border-slate-100 rounded-xl shadow-sm"
+        <UserAvatar
+          user={user}
+          profile={profile}
+          onGuestClick={() => setAuthModal('login')}
+          onLogout={logout}
         />
       </div>
+
+      <LoginModal
+        isOpen={authModal === 'login'}
+        onClose={() => setAuthModal(null)}
+        onSwitchToSignup={() => setAuthModal('signup')}
+        onSuccess={() => setAuthModal(null)}
+      />
+      <SignupModal
+        isOpen={authModal === 'signup'}
+        onClose={() => setAuthModal(null)}
+        onSwitchToLogin={() => setAuthModal('login')}
+        onSubmit={(payload) => {
+          registerDemoUser(payload)
+          setAuthModal(null)
+          onRegisterClick?.()
+        }}
+      />
     </header>
   )
 }

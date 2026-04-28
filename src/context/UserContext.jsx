@@ -16,12 +16,39 @@ const DEMO_USER = {
   streak:          12,
   streak_count:    12,
   isAuthenticated: true,
+  isFirstTime: false,
+  onboardingCompleted: true,
+}
+
+const DEMO_STORAGE_KEY = 'lingify_demo_auth'
+
+function buildDemoUser(overrides = {}) {
+  return {
+    ...DEMO_USER,
+    ...overrides,
+    isAuthenticated: true,
+  }
 }
 
 export function UserProvider({ children }) {
-  const [user,    setUserState] = useState(IS_DEMO ? DEMO_USER : null)
+  const [user,    setUserState] = useState(() => {
+    if (!IS_DEMO) return null
+    const raw = localStorage.getItem(DEMO_STORAGE_KEY)
+    if (!raw) return null
+    try {
+      return buildDemoUser(JSON.parse(raw))
+    } catch {
+      return null
+    }
+  })
   const [session, setSession]   = useState(null)
   const [loading, setLoading]   = useState(!IS_DEMO)  // demo: no loading
+  const profile = user
+    ? {
+        name: user.name ?? 'User',
+        avatar_url: user.avatar_url ?? user.avatar ?? null,
+      }
+    : null
 
   // ── Demo mode: skip all Supabase calls ──────────────────────────────────
   useEffect(() => {
@@ -41,6 +68,8 @@ export function UserProvider({ children }) {
           streak:        profile.streak_count  ?? 0,
           streak_count:  profile.streak_count  ?? 0,
           isAuthenticated: true,
+          onboardingCompleted: profile.onboarding_completed ?? false,
+          isFirstTime: !(profile.onboarding_completed ?? false),
         })
       } catch {
         setUserState({
@@ -54,6 +83,8 @@ export function UserProvider({ children }) {
           streak:        0,
           streak_count:  0,
           isAuthenticated: true,
+          onboardingCompleted: false,
+          isFirstTime: true,
         })
       }
     }
@@ -83,18 +114,63 @@ export function UserProvider({ children }) {
   }, [])
 
   async function logout() {
-    if (IS_DEMO) { console.info('[Demo] Logout is disabled in demo mode.'); return }
+    if (IS_DEMO) {
+      localStorage.removeItem(DEMO_STORAGE_KEY)
+      setUserState(null)
+      return
+    }
     await supabase.auth.signOut()
     setUserState(null)
     setSession(null)
   }
 
   function patchUser(updates) {
-    setUserState((prev) => (prev ? { ...prev, ...updates } : prev))
+    setUserState((prev) => {
+      if (!prev) return prev
+      const next = { ...prev, ...updates }
+      if (IS_DEMO) {
+        localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(next))
+      }
+      return next
+    })
+  }
+
+  function registerDemoUser({ name, contact, role }) {
+    const demoUser = buildDemoUser({
+      name: name?.trim() || 'Asadbek',
+      email: contact?.includes('@') ? contact : `${(name || 'user').toLowerCase().replace(/\s+/g, '')}@lingify.demo`,
+      role: role || 'student',
+      isFirstTime: true,
+      onboardingCompleted: false,
+      level: null,
+    })
+    localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(demoUser))
+    setUserState(demoUser)
+  }
+
+  function completeOnboarding(payload) {
+    patchUser({
+      ...payload,
+      onboardingCompleted: true,
+      isFirstTime: false,
+      level: payload?.level || 'B1',
+    })
   }
 
   return (
-    <UserContext.Provider value={{ user, session, loading, setUser: patchUser, logout, isDemo: IS_DEMO }}>
+    <UserContext.Provider
+      value={{
+        user,
+        profile,
+        session,
+        loading,
+        setUser: patchUser,
+        logout,
+        isDemo: IS_DEMO,
+        registerDemoUser,
+        completeOnboarding,
+      }}
+    >
       {children}
     </UserContext.Provider>
   )

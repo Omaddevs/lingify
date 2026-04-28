@@ -8,6 +8,7 @@ import MobileBottomNav from '../components/Cards/MobileBottomNav'
 import Sidebar from '../components/Sidebar'
 import { useUser } from '../context/UserContext'
 import { uploadAvatar, updateProfile } from '../services/profileService'
+import { PremiumModal, usePremium } from '../components/PremiumModal'
 
 const settingMenu = [
   { title: 'Account',          subtitle: 'Manage your profile',            icon: UserRound,  section: 'profile' },
@@ -214,6 +215,87 @@ function PrivacySection() {
   )
 }
 
+// ── Subscription Section ─────────────────────────────────────────────────────
+function SubscriptionSection({ openPremium }) {
+  const isPremium = false // demo mode: always free
+
+  const FREE_LIMITS = [
+    { label: 'Kunlik darslar', free: '3 ta', premium: 'Cheksiz' },
+    { label: 'Mock testlar', free: '1 ta/oy', premium: 'Cheksiz' },
+    { label: 'Vocabulary', free: '50 ta so\'z', premium: 'Cheksiz' },
+    { label: 'AI feedback', free: '—', premium: '✓ Bor' },
+    { label: 'Sertifikat', free: '—', premium: '✓ Bor' },
+    { label: 'PDF natijalar', free: '—', premium: '✓ Bor' },
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* Current plan */}
+      <article className={`overflow-hidden rounded-2xl border p-5 shadow-sm ${
+        isPremium ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50' : 'border-slate-200 bg-white'
+      }`}>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              {isPremium
+                ? <span className="flex items-center gap-1.5 rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-white">👑 Premium</span>
+                : <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">Bepul plan</span>}
+            </div>
+            <p className="mt-2 text-sm text-slate-600">
+              {isPremium
+                ? 'Barcha imkoniyatlardan to\'liq foydalanmoqdasiz.'
+                : 'Hozir bepul rejimdasiz. Premium orqali cheksiz imkoniyatlarni oching.'}
+            </p>
+          </div>
+          {!isPremium && (
+            <button onClick={openPremium}
+              className="shrink-0 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 px-4 py-2 text-xs font-bold text-white shadow-md">
+              Upgrade
+            </button>
+          )}
+        </div>
+      </article>
+
+      {/* Plan comparison table */}
+      <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="grid grid-cols-3 border-b border-slate-100 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-500">
+          <span>Imkoniyat</span>
+          <span className="text-center">Bepul</span>
+          <span className="text-center text-indigo-700">Premium</span>
+        </div>
+        {FREE_LIMITS.map(({ label, free, premium }, i) => (
+          <div key={label} className={`grid grid-cols-3 items-center px-4 py-3 text-sm ${i % 2 === 0 ? '' : 'bg-slate-50/50'}`}>
+            <span className="text-slate-700">{label}</span>
+            <span className={`text-center text-xs ${free === '—' ? 'text-slate-300' : 'text-slate-600'}`}>{free}</span>
+            <span className="text-center text-xs font-semibold text-emerald-600">{premium}</span>
+          </div>
+        ))}
+      </article>
+
+      {!isPremium && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[
+            { id: 'monthly', label: 'Oylik', price: '49 000 UZS/oy', badge: null },
+            { id: 'yearly',  label: 'Yillik', price: '399 000 UZS/yil', badge: '32% tejash 🔥' },
+          ].map((plan) => (
+            <button key={plan.id} onClick={openPremium}
+              className="relative rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-4 text-left hover:border-indigo-400 transition">
+              {plan.badge && (
+                <span className="absolute -top-2.5 right-3 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">
+                  {plan.badge}
+                </span>
+              )}
+              <p className="text-xs font-semibold text-slate-500">{plan.label}</p>
+              <p className="mt-1 text-lg font-black text-indigo-800">{plan.price}</p>
+              <p className="mt-2 text-xs text-indigo-600">Barcha imkoniyatlar →</p>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function PlaceholderSection({ title, icon: Icon }) {
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -221,18 +303,19 @@ function PlaceholderSection({ title, icon: Icon }) {
         {Icon && <Icon size={20} className="text-indigo-500" />}
         <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
       </div>
-      <p className="mt-2 text-sm text-slate-500">This section is coming soon.</p>
+      <p className="mt-2 text-sm text-slate-500">Bu bo'lim tez orada ochiladi.</p>
     </article>
   )
 }
 
-function RightPanel({ section, user, patchUser, logout }) {
+function RightPanel({ section, user, patchUser, logout, openPremium }) {
   switch (section) {
     case 'profile':       return <ProfileSection user={user} patchUser={patchUser} logout={logout} />
     case 'notifications': return <NotificationsSection />
     case 'privacy':       return <PrivacySection />
-    case 'appearance':    return <PlaceholderSection title="Preferences" icon={Monitor} />
-    case 'language':      return <PlaceholderSection title="Language" icon={Globe} />
+    case 'subscription':  return <SubscriptionSection openPremium={openPremium} />
+    case 'appearance':    return <PlaceholderSection title="Ko'rinish sozlamalari" icon={Monitor} />
+    case 'language':      return <PlaceholderSection title="Til sozlamalari" icon={Globe} />
     default: {
       const item = settingMenu.find((m) => m.section === section)
       return <PlaceholderSection title={item?.title ?? section} icon={item?.icon} />
@@ -243,13 +326,16 @@ function RightPanel({ section, user, patchUser, logout }) {
 export default function SettingsPage() {
   const { user, setUser: patchUser, logout } = useUser()
   const [activeSection, setActiveSection] = useState('profile')
+  const { isOpen: premiumOpen, openPremium, closePremium } = usePremium()
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-5 md:px-6">
+      <PremiumModal isOpen={premiumOpen} onClose={closePremium} />
+
       <div className="flex w-full gap-5">
         <Sidebar />
         <main className="min-h-[calc(100vh-40px)] w-full rounded-[20px] border border-slate-200 bg-white p-4 shadow-md md:p-6">
-          <Header title="Settings" subtitle="Manage your account, preferences and more" />
+          <Header title="Sozlamalar" subtitle="Akkount, sozlamalar va boshqa imkoniyatlar" />
 
           <section className="grid gap-4 xl:grid-cols-[300px_1fr]">
             <aside className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
@@ -277,7 +363,7 @@ export default function SettingsPage() {
             </aside>
 
             <div>
-              <RightPanel section={activeSection} user={user} patchUser={patchUser} logout={logout} />
+              <RightPanel section={activeSection} user={user} patchUser={patchUser} logout={logout} openPremium={openPremium} />
             </div>
           </section>
         </main>

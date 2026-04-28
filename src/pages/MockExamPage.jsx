@@ -1,4 +1,5 @@
-import { useState } from 'react' // FIXED: [3] added useState for tab management
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   AlarmClock,
   BarChart3,
@@ -6,62 +7,102 @@ import {
   ChevronDown,
   ChevronRight,
   ClipboardCheck,
+  Crown,
   Headphones,
+  Lock,
   Mic,
   PenLine,
+  Trophy,
 } from 'lucide-react'
 import Header from '../components/Header'
 import MobileBottomNav from '../components/Cards/MobileBottomNav'
 import Sidebar from '../components/Sidebar'
+import { PremiumModal, usePremium } from '../components/PremiumModal'
+import { TEST_CATALOG, getTestResults, calculateBandScore } from '../data/mockTests'
 
 const examTabs = ['IELTS', 'TOEFL', 'SAT', 'PTE']
 
-const statItems = [
-  { label: 'Tests Taken', value: '12', icon: ClipboardCheck },
-  { label: 'Best Score', value: '7.0', icon: BookCheck },
-  { label: 'Average Score', value: '6.5', icon: BarChart3 },
-  { label: 'Total Time', value: '18h 30m', icon: AlarmClock },
-]
-
-const examTypes = [
-  { title: 'Listening', questions: '40 Questions', time: '30 min', icon: Headphones },
-  { title: 'Reading', questions: '40 Questions', time: '60 min', icon: BookCheck },
-  { title: 'Writing', questions: '2 Tasks', time: '60 min', icon: PenLine },
-  { title: 'Speaking', questions: '3 Parts', time: '11-14 min', icon: Mic },
-]
-
-const fullMockTests = [
-  { title: 'IELTS Full Mock Test 1', sections: '4 Sections - 2h 45m', level: 'B1 - C2', best: '7.0', taken: '2 days ago', action: 'Review Result' },
-  { title: 'IELTS Full Mock Test 2', sections: '4 Sections - 2h 45m', level: 'B1 - C2', best: '6.5', taken: '1 week ago', action: 'Review Result' },
-  { title: 'IELTS Full Mock Test 3', sections: '4 Sections - 2h 45m', level: 'B1 - C2', best: '-', taken: 'Not taken', action: 'Start Test' },
-]
-
-const performanceRows = [
-  { label: 'Listening', score: '7.5', color: 'bg-emerald-500' },
-  { label: 'Reading', score: '7.0', color: 'bg-sky-500' },
-  { label: 'Writing', score: '6.5', color: 'bg-amber-500' },
-  { label: 'Speaking', score: '7.0', color: 'bg-violet-500' },
-]
+const examTypesMeta = {
+  IELTS: [
+    { title: 'Listening', questions: '40 Savol', time: '30 daq', icon: Headphones, testId: 'ielts-listening-1' },
+    { title: 'Reading',   questions: '40 Savol', time: '60 daq', icon: BookCheck,  testId: 'ielts-reading-1' },
+    { title: 'Writing',   questions: '2 Topshiriq', time: '60 daq', icon: PenLine, testId: 'ielts-writing-1', premium: true },
+    { title: 'Speaking',  questions: '3 Qism', time: '11-14 daq', icon: Mic, testId: null },
+  ],
+  TOEFL: [
+    { title: 'Reading',   questions: '36-56 Savol', time: '54-72 daq', icon: BookCheck, testId: 'toefl-reading-1' },
+    { title: 'Listening', questions: '28-39 Savol', time: '41-57 daq', icon: Headphones, testId: null },
+    { title: 'Speaking',  questions: '4 Topshiriq', time: '17 daq', icon: Mic, testId: null },
+    { title: 'Writing',   questions: '2 Topshiriq', time: '50 daq', icon: PenLine, testId: null, premium: true },
+  ],
+  SAT: [
+    { title: 'Math (No Calc)', questions: '20 Savol', time: '25 daq', icon: BookCheck, testId: 'sat-math-1' },
+    { title: 'Math (Calc)',    questions: '38 Savol', time: '55 daq', icon: BookCheck, testId: null },
+    { title: 'Reading',        questions: '52 Savol', time: '65 daq', icon: BookCheck, testId: null },
+    { title: 'Writing/Lang',   questions: '44 Savol', time: '35 daq', icon: PenLine,   testId: null },
+  ],
+  PTE: [
+    { title: 'Speaking & Writing', questions: 'Aralash', time: '77-93 daq', icon: Mic, testId: null },
+    { title: 'Reading',             questions: 'Aralash', time: '32-41 daq', icon: BookCheck, testId: null },
+    { title: 'Listening',           questions: 'Aralash', time: '45-57 daq', icon: Headphones, testId: null },
+  ],
+}
 
 function MockExamPage() {
-  const [activeTab, setActiveTab] = useState(0) // FIXED: [3] tab state replaces hardcoded index === 0
+  const navigate = useNavigate()
+  const [activeTab, setActiveTab] = useState(0)
+  const { isOpen: premiumOpen, featureName, openPremium, closePremium } = usePremium()
+
+  const results = getTestResults()
+  const bestResult = results.length > 0
+    ? results.reduce((best, r) => (!best || (r.band || 0) > (best.band || 0) ? r : best), null)
+    : null
+
+  const activeExam = examTabs[activeTab]
+  const currentTypes = examTypesMeta[activeExam] || []
+
+  const fullTests = TEST_CATALOG.filter((t) => t.type === activeExam)
+
+  function handleStartSection(section) {
+    if (section.premium) { openPremium(section.title); return }
+    if (section.testId) {
+      navigate(`/mock-test/${section.testId}`)
+    } else {
+      openPremium(`${activeExam} ${section.title}`)
+    }
+  }
+
+  function handleStartFull(test) {
+    if (test.premium) { openPremium(test.title); return }
+    navigate(`/mock-test/${test.id}`)
+  }
+
+  const statItems = [
+    { label: 'Topshirilgan', value: results.length, icon: ClipboardCheck },
+    { label: 'Eng yaxshi ball', value: bestResult?.band ?? '—', icon: BookCheck },
+    { label: "O'rtacha", value: results.length ? (results.reduce((s, r) => s + (r.band || 0), 0) / results.length).toFixed(1) : '—', icon: BarChart3 },
+    { label: 'Jami vaqt', value: `${results.length * 30}daq`, icon: AlarmClock },
+  ]
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-5 md:px-6">
+      <PremiumModal isOpen={premiumOpen} onClose={closePremium} featureName={featureName} />
+
       <div className="flex w-full gap-5">
-        <Sidebar /> {/* FIXED: [2] activeItem prop removed */}
+        <Sidebar />
 
         <main className="min-h-[calc(100vh-40px)] w-full rounded-[20px] border border-slate-200 bg-white p-4 shadow-md md:p-6">
-          <Header title="Mock Exam" subtitle="Simulate real tests and track your performance" />
+          <Header title="Mock Imtihon" subtitle="Haqiqiy imtihon muhitini simulyatsiya qiling" />
 
+          {/* Exam type tabs */}
           <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div className="flex gap-2">
               {examTabs.map((tab, index) => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(index)} // FIXED: [3] onClick updates active tab
+                  onClick={() => setActiveTab(index)}
                   className={`rounded-lg px-4 py-2 text-xs font-semibold transition ${
-                    activeTab === index // FIXED: [3] activeTab state replaces hardcoded index === 0
+                    activeTab === index
                       ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
@@ -71,21 +112,31 @@ function MockExamPage() {
               ))}
             </div>
             <button className="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">
-              All Levels
+              Barcha darajalar
               <ChevronDown size={14} />
             </button>
           </section>
 
+          {/* Hero + Stats */}
           <section className="grid gap-4 lg:grid-cols-[2fr_1fr]">
             <article className="overflow-hidden rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50 to-violet-50 p-6 shadow-sm">
-              <div className="grid items-center gap-4 md:grid-cols-[1fr_210px]">
+              <div className="grid items-center gap-4 md:grid-cols-[1fr_180px]">
                 <div>
-                  <h2 className="text-4xl font-bold leading-tight tracking-tight text-slate-900">Take a full-length mock exam</h2>
-                  <p className="mt-3 max-w-md text-sm text-slate-600">
-                    Experience the real test environment and improve your band score.
+                  <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                    <Trophy size={11} />
+                    {activeExam} Mock Test
+                  </div>
+                  <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+                    To'liq uzunlikdagi mock imtihon
+                  </h2>
+                  <p className="mt-2 max-w-md text-sm text-slate-600">
+                    Haqiqiy {activeExam} imtihon muhitini boshdan kechiring va ball bahoingizni biling.
                   </p>
-                  <button className="mt-5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:scale-[1.03] hover:shadow-lg">
-                    Start Full Mock Test
+                  <button
+                    onClick={() => handleStartFull(fullTests[0] || { id: 'ielts-reading-1', type: 'IELTS', premium: false })}
+                    className="mt-5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:scale-[1.03] hover:shadow-lg"
+                  >
+                    To'liq Mock Test Boshlash
                   </button>
                 </div>
                 <div className="relative hidden h-36 md:block">
@@ -98,100 +149,136 @@ function MockExamPage() {
             </article>
 
             <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h3 className="mb-3 text-base font-semibold text-slate-900">Your Mock Stats</h3>
+              <h3 className="mb-3 text-base font-semibold text-slate-900">Sizning natijalaringiz</h3>
               <div className="grid grid-cols-2 gap-3">
                 {statItems.map(({ label, value, icon: Icon }) => (
                   <div key={label} className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                    <div className="mb-2 flex items-center gap-2 text-slate-500">
-                      <Icon size={14} />
+                    <div className="mb-2 flex items-center gap-2 text-slate-400">
+                      <Icon size={13} />
                       <span className="text-[11px]">{label}</span>
                     </div>
-                    <p className="text-xl font-semibold text-slate-900">{value}</p>
+                    <p className="text-xl font-bold text-slate-900">{value}</p>
                   </div>
                 ))}
               </div>
             </article>
           </section>
 
+          {/* Section types */}
           <section className="mt-5 grid gap-4 lg:grid-cols-[2fr_1fr]">
             <div>
-              <h3 className="mb-3 text-xl font-semibold text-slate-900">Mock Exam Types</h3>
+              <h3 className="mb-3 text-xl font-semibold text-slate-900">Bo'limlar bo'yicha mashq</h3>
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                {examTypes.map(({ title, questions, time, icon: Icon }) => (
+                {currentTypes.map(({ title, questions, time, icon: Icon, testId, premium }) => (
                   <article key={title} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-100 text-indigo-600">
                       <Icon size={17} />
                     </div>
-                    <p className="mt-3 text-lg font-semibold text-slate-900">{title}</p>
+                    <div className="mt-3 flex items-center gap-1.5">
+                      <p className="text-base font-semibold text-slate-900">{title}</p>
+                      {premium && <Crown size={13} className="text-amber-500" />}
+                    </div>
                     <p className="mt-1 text-xs text-slate-500">{questions}</p>
                     <p className="text-xs text-slate-500">{time}</p>
-                    <button className="mt-4 w-full rounded-lg border border-indigo-200 py-2 text-xs font-medium text-indigo-700 transition hover:bg-indigo-50">
-                      Start Test
+                    <button
+                      onClick={() => handleStartSection({ title, testId, premium })}
+                      className={`mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg border py-2 text-xs font-medium transition ${
+                        premium
+                          ? 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100'
+                          : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50'
+                      }`}
+                    >
+                      {premium && <Lock size={11} />}
+                      {testId || !premium ? 'Testni boshlash' : 'Premium kerak'}
                     </button>
                   </article>
                 ))}
               </div>
 
-              <h3 className="mb-3 mt-5 text-xl font-semibold text-slate-900">Full Length Mock Tests</h3>
+              {/* Full tests list */}
+              <h3 className="mb-3 mt-5 text-xl font-semibold text-slate-900">To'liq Mock Testlar</h3>
               <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                {fullMockTests.map((test, index) => (
+                {fullTests.map((test, index) => (
                   <div
-                    key={test.title}
-                    className={`grid grid-cols-[1.8fr_0.7fr_0.6fr_0.8fr_auto] items-center gap-3 px-4 py-3 ${
-                      index !== fullMockTests.length - 1 ? 'border-b border-slate-100' : ''
+                    key={test.id}
+                    className={`flex items-center gap-3 px-4 py-3 ${
+                      index !== fullTests.length - 1 ? 'border-b border-slate-100' : ''
                     }`}
                   >
-                    <div>
-                      <p className="text-sm font-semibold text-slate-800">{test.title}</p>
-                      <p className="text-xs text-slate-500">{test.sections}</p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-slate-800">{test.title}</p>
+                        {test.premium && <Crown size={13} className="text-amber-500" />}
+                      </div>
+                      <p className="text-xs text-slate-500">
+                        {test.sections.join(' · ')} — {test.totalTime} daq · {test.questions} savol
+                      </p>
                     </div>
-                    <div className="text-xs text-slate-500">
-                      <p>Level</p>
+                    <div className="shrink-0 text-right text-xs text-slate-400">
+                      <p>Daraja</p>
                       <p className="font-medium text-slate-700">{test.level}</p>
                     </div>
-                    <div className="text-xs text-slate-500">
-                      <p>Best</p>
-                      <p className="font-medium text-slate-700">{test.best}</p>
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      <p>Taken</p>
-                      <p className="font-medium text-slate-700">{test.taken}</p>
-                    </div>
-                    <button className="rounded-lg border border-indigo-200 px-3 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-50">
-                      {test.action}
+                    <button
+                      onClick={() => handleStartFull(test)}
+                      className={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
+                        test.premium
+                          ? 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100'
+                          : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50'
+                      }`}
+                    >
+                      {test.premium ? <span className="flex items-center gap-1"><Lock size={10} />Premium</span> : 'Boshlash'}
                     </button>
                   </div>
                 ))}
-                <button className="w-full border-t border-slate-100 py-2 text-sm font-medium text-indigo-600 hover:bg-slate-50">
-                  View All Mock Tests
-                </button>
+                {fullTests.length === 0 && (
+                  <p className="py-6 text-center text-sm text-slate-400">Tez orada qo'shiladi</p>
+                )}
               </div>
             </div>
 
+            {/* Performance panel */}
             <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h3 className="text-base font-semibold text-slate-900">Overall Performance</h3>
+              <h3 className="text-base font-semibold text-slate-900">Umumiy Ko'rsatkich</h3>
               <div className="mx-auto mt-4 grid h-40 w-40 place-items-center rounded-full bg-[conic-gradient(#4f46e5_72%,#e8eafc_72%)]">
                 <div className="grid h-28 w-28 place-items-center rounded-full bg-white">
-                  <p className="text-4xl font-bold text-slate-900">7.0</p>
-                  <p className="text-xs text-slate-500">Overall Band</p>
+                  <p className="text-4xl font-bold text-slate-900">
+                    {bestResult?.band ?? '—'}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {bestResult ? 'Eng yuqori' : 'Hali yo\'q'}
+                  </p>
                 </div>
               </div>
-              <div className="mt-5 space-y-3">
-                {performanceRows.map((row) => (
-                  <div key={row.label} className="flex items-center justify-between text-sm">
-                    <span className="inline-flex items-center gap-2 text-slate-600">
-                      <span className={`h-2 w-2 rounded-full ${row.color}`} />
-                      {row.label}
-                    </span>
-                    <span className="font-semibold text-slate-800">{row.score}</span>
-                  </div>
-                ))}
-              </div>
-              <button className="mt-5 w-full rounded-xl border border-indigo-200 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50">
-                See Detailed Report
+
+              {results.length > 0 ? (
+                <div className="mt-5 space-y-2">
+                  {results.slice(0, 4).map((r, i) => (
+                    <div key={r.id} className="flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-2 text-slate-600">
+                        <span className="h-2 w-2 rounded-full bg-indigo-400" />
+                        {r.testTitle?.substring(0, 18) || 'Test'}...
+                      </span>
+                      <span className="font-semibold text-slate-800">
+                        {r.band || `${r.correct}/${r.total}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-5 text-center text-xs text-slate-400">
+                  Hali test topshirilmagan. Birinchi testni boshlang!
+                </p>
+              )}
+
+              <button
+                onClick={() => navigate('/progress')}
+                className="mt-5 w-full rounded-xl border border-indigo-200 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
+              >
+                Batafsil ko'rish
               </button>
             </article>
           </section>
+
           <div className="pb-16 xl:pb-0" />
         </main>
       </div>

@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle2, ChevronDown, Eye, EyeOff, GraduationCap, Lock, MessageSquare, Presentation, User, X } from 'lucide-react'
+import { CheckCircle2, Eye, EyeOff, GraduationCap, Lock, Mail, MessageSquare, Presentation, User, X } from 'lucide-react'
 
 const FOCUSABLE = 'input:not([disabled]), button:not([disabled]), select, textarea, a[href]'
 
 const roles = [
   { id: 'student', title: 'Student', icon: GraduationCap },
   { id: 'teacher', title: 'Teacher', icon: Presentation },
-  { id: 'user',    title: 'User',    icon: User },
 ]
 
-function RegistrationModal({ isOpen, onClose }) {
+function RegistrationModal({ isOpen, onClose, onSubmit, onSwitchToLogin }) {
   const [selectedRole, setSelectedRole] = useState('student')
   const [showPassword, setShowPassword] = useState(false)
-  const [phoneNumber,  setPhoneNumber]  = useState('')
+  const [name,         setName]         = useState('')
+  const [contact,      setContact]      = useState('')
   const [password,     setPassword]     = useState('')
 
   const dialogRef = useRef(null)
@@ -102,7 +102,7 @@ function RegistrationModal({ isOpen, onClose }) {
               <legend className="mb-3 text-sm font-semibold text-slate-700">
                 I am registering as
               </legend>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 {roles.map((role) => (
                   <button
                     key={role.id}
@@ -137,29 +137,44 @@ function RegistrationModal({ isOpen, onClose }) {
               </div>
             </fieldset>
 
-            {/* Phone */}
+            {/* Name */}
             <div className="space-y-2">
-              <label htmlFor="modal-phone" className="text-sm font-semibold text-slate-700">
-                Phone number
+              <label htmlFor="modal-name" className="text-sm font-semibold text-slate-700">
+                Full name
               </label>
               <div className="flex items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 transition-all focus-within:border-indigo-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-100">
-                <div className="flex cursor-pointer items-center gap-1.5 border-r border-slate-200 px-4 py-3 hover:bg-slate-100 transition-colors">
-                  <img
-                    src="https://flagcdn.com/w20/uz.png"
-                    alt="Uzbekistan flag"
-                    className="h-4 w-6 rounded-sm object-cover"
-                  />
-                  <span className="text-sm font-semibold text-slate-700">+998</span>
-                  <ChevronDown size={14} className="text-slate-400" aria-hidden="true" />
-                </div>
+                <span className="pl-4 text-slate-400" aria-hidden="true">
+                  <User size={18} />
+                </span>
                 <input
-                  id="modal-phone"
-                  type="tel"
-                  autoComplete="tel"
-                  placeholder="90 123 45 67"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="w-full bg-transparent px-4 py-3 text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400"
+                  id="modal-name"
+                  type="text"
+                  autoComplete="name"
+                  placeholder="Asadbek Yusupov"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full bg-transparent px-3 py-3 text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+
+            {/* Phone or Email */}
+            <div className="space-y-2">
+              <label htmlFor="modal-contact" className="text-sm font-semibold text-slate-700">
+                Phone or email
+              </label>
+              <div className="flex items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 transition-all focus-within:border-indigo-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-100">
+                <span className="pl-4 text-slate-400" aria-hidden="true">
+                  <Mail size={18} />
+                </span>
+                <input
+                  id="modal-contact"
+                  type="text"
+                  autoComplete="email"
+                  placeholder="+998 90 123 45 67 or you@email.com"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  className="w-full bg-transparent px-3 py-3 text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -209,7 +224,8 @@ function RegistrationModal({ isOpen, onClose }) {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                type="submit"
+                type="button"
+                onClick={() => onSubmit?.({ name, contact, password, role: selectedRole })}
                 className="w-full rounded-2xl bg-indigo-600 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition duration-300 hover:bg-indigo-700"
               >
                 Create Account
@@ -219,7 +235,7 @@ function RegistrationModal({ isOpen, onClose }) {
                 <button
                   type="button"
                   className="font-bold text-indigo-600 hover:underline"
-                  onClick={onClose}
+                  onClick={onSwitchToLogin || onClose}
                 >
                   Log in
                 </button>
