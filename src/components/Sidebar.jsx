@@ -1,8 +1,8 @@
 import {
   BookOpenCheck, ChartNoAxesColumn, FileCheck2, Gamepad2, GraduationCap, Handshake,
-  House, LayoutDashboard, Lock, MessageCircleMore, Settings, Trophy, Video,
+  House, LayoutDashboard, Lock, MessageCircleMore, Search, Settings, Trophy, Video,
 } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import logo1 from '../images/logo2.png'
 import { useUser } from '../context/UserContext'
 
@@ -23,7 +23,8 @@ const BASE_ITEMS = [
 const TEACHER_ITEM = { name: 'Mening Darslarim', icon: LayoutDashboard, path: '/teacher-dashboard' }
 
 function Sidebar({ locked = false, onLockedClick, recommendedItem }) {
-  const { user } = useUser()
+  const { user }  = useUser()
+  const navigate  = useNavigate()
   const isTeacher = user?.role === 'teacher'
   const menuItems = isTeacher
     ? [BASE_ITEMS[0], TEACHER_ITEM, ...BASE_ITEMS.slice(1)]
@@ -33,9 +34,19 @@ function Sidebar({ locked = false, onLockedClick, recommendedItem }) {
       aria-label="Main navigation"
       className="sticky top-5 hidden h-[calc(100vh-40px)] w-[250px] flex-col overflow-hidden rounded-[20px] border border-slate-100 bg-white p-5 shadow-md xl:flex"
     >
-      <div className="mb-8 flex items-center gap-2.5">
+      <div className="mb-4 flex items-center gap-2.5">
         <img src={logo1} alt="Lingify — go to home page" className="h-10 w-auto" />
       </div>
+
+      {/* Search button */}
+      {!locked && (
+        <button onClick={() => navigate('/search')}
+          className="mb-4 flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-400 hover:border-indigo-300 hover:bg-white hover:text-slate-600 transition">
+          <Search size={14} />
+          <span className="flex-1 text-left text-xs">Qidirish...</span>
+          <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-slate-400">⌘K</kbd>
+        </button>
+      )}
 
       <nav aria-label="Site pages" className="min-h-0 flex-1 overflow-y-auto pr-1">
         <ul className="space-y-2">

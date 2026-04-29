@@ -6,6 +6,7 @@ import { useNotification } from './hooks/useNotification'
 import { useStreak } from './hooks/useStreak'
 import { NotificationToast } from './components/NotificationToast'
 import OnboardingModal from './components/OnboardingModal'
+import { AIChatWidget } from './components/AIChatWidget'
 
 // ── Eager loaded (critical path) ─────────────────────────────────────────────
 import Dashboard       from './pages/Dashboard'
@@ -33,6 +34,7 @@ const AdminPage           = lazy(() => import('./pages/AdminPage'))
 const VocabularyPage      = lazy(() => import('./pages/VocabularyPage'))
 const CertificatePage     = lazy(() => import('./pages/CertificatePage'))
 const ProfilePage         = lazy(() => import('./pages/ProfilePage'))
+const SearchPage          = lazy(() => import('./pages/SearchPage'))
 
 // ── Loading spinner ───────────────────────────────────────────────────────────
 function PageLoader() {
@@ -101,6 +103,7 @@ function App() {
           <Route path="/speaking-practice"     element={<SpeakingPracticePage />} />
           <Route path="/settings"              element={<SettingsPage />} />
           <Route path="/certificate"           element={<CertificatePage />} />
+          <Route path="/search"               element={<SearchPage />} />
           <Route path="/login"                 element={<Navigate to="/" replace />} />
           <Route path="/vocabulary/words"      element={<VocabularyPage />} />
           <Route path="/vocabulary/categories" element={<VocabularyPage />} />
@@ -115,6 +118,7 @@ function App() {
       )}
 
       <NotificationToast notifications={notifications} />
+      <AIChatWidget />
     </>
   )
 }

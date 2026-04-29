@@ -1,20 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  BookOpenCheck,
-  Bot,
-  Calendar,
-  ChartColumnBig,
-  CirclePlay,
-  Flame,
-  GraduationCap,
-  MessagesSquare,
-  Target,
-  Trophy,
-  UsersRound,
-  Zap,
+  BookOpenCheck, Bot, Calendar, ChartColumnBig, CirclePlay,
+  Flame, GraduationCap, MessagesSquare, Target, Trophy, UsersRound, Zap,
 } from 'lucide-react'
+import { DailyChallengeWidget } from '../components/DailyChallengeWidget'
 import BottomPanels from '../components/Cards/BottomPanels'
 import LearningModules from '../components/Cards/LearningModules'
 import MobileBottomNav from '../components/Cards/MobileBottomNav'
@@ -502,19 +493,10 @@ function PersonalizedDashboard() {
 
             <div className="space-y-4 pb-20 xl:pb-0">
             <OverviewCards />
+            <DailyChallengeWidget />
             <PartnerLessonSection />
             <LearningModules />
             <BottomPanels />
-            <div className="grid gap-3 md:grid-cols-2">
-              <article className="rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/60 p-4">
-                <p className="font-semibold text-indigo-800">Start your first AI conversation</p>
-                <p className="text-sm text-indigo-700">Get instant speaking feedback in under 2 minutes.</p>
-              </article>
-              <article className="rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/60 p-4">
-                <p className="font-semibold text-emerald-800">Learn your first 10 words</p>
-                <p className="text-sm text-emerald-700">Build daily momentum with quick vocabulary drills.</p>
-              </article>
-            </div>
             </div>
           </div>
         </main>

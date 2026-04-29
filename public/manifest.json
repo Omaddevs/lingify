@@ -1,0 +1,66 @@
+{
+  "name": "Lingify — Ingliz tilini o'rganing",
+  "short_name": "Lingify",
+  "description": "O'zbek tilida ingliz tili o'rgatuvchi platforma. IELTS, TOEFL, Speaking, Vocabulary.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#6366f1",
+  "lang": "uz",
+  "categories": ["education", "language", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "390x844",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Lingify Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Darslar",
+      "short_name": "Darslar",
+      "description": "Online darslarni boshlash",
+      "url": "/online-lessons",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Flashcard",
+      "short_name": "Flashcard",
+      "description": "So'zlarni takrorlash",
+      "url": "/flashcards",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Mock Test",
+      "short_name": "Test",
+      "description": "Mock imtihon topshirish",
+      "url": "/mock-exam",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}

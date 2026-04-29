@@ -1,13 +1,63 @@
 <!doctype html>
-<html lang="en">
+<html lang="uz">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Primary Meta -->
+    <title>Lingify — O'zbek tilida ingliz tili o'rganish</title>
+    <meta name="description" content="O'zbekistondagi eng kuchli ingliz tili platformasi. IELTS, TOEFL, SAT mock testlar, AI Speaking Coach, real partnerlar va 500+ so'z lug'ati." />
+    <meta name="keywords" content="ingliz tili, IELTS, TOEFL, SAT, speaking, vocabulary, o'zbek, lingify, mock test" />
+    <meta name="author" content="Lingify" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#6366f1" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Lingify" />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>english</title>
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lingify" />
+    <meta property="og:title" content="Lingify — O'zbek tilida ingliz tili o'rganish" />
+    <meta property="og:description" content="IELTS, TOEFL, SAT tayyorlov. AI Speaking Coach. Real partnerlar. 500+ so'z lug'ati. O'zbek tilida tushuntirishlar." />
+    <meta property="og:url" content="https://lingify.uz" />
+    <meta property="og:locale" content="uz_UZ" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Lingify — Ingliz tilini o'rgan" />
+    <meta name="twitter:description" content="O'zbekistondagi eng kuchli ingliz tili platformasi. IELTS, TOEFL, AI Speaking." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then((reg) => {
+              console.log('[Lingify SW] Registered:', reg.scope)
+              // Check for updates every 60s
+              setInterval(() => reg.update(), 60000)
+            })
+            .catch((err) => console.warn('[Lingify SW] Registration failed:', err))
+        })
+      }
+    </script>
   </body>
 </html>

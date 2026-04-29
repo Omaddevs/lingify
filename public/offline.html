@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lingify — Offline</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #e2e8f0;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0,0,0,.08);
+    }
+    .emoji { font-size: 64px; margin-bottom: 16px; }
+    h1 { font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; }
+    p  { font-size: 14px; color: #64748b; line-height: 1.6; margin-bottom: 24px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .9 }
+    .tips {
+      margin-top: 24px;
+      padding: 16px;
+      background: #f1f5f9;
+      border-radius: 14px;
+      text-align: left;
+    }
+    .tips h3 { font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em; }
+    .tips ul { list-style: none; }
+    .tips li { font-size: 13px; color: #64748b; padding: 4px 0; }
+    .tips li::before { content: '✓ '; color: #6366f1; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="emoji">📡</div>
+    <h1>Internet aloqasi yo'q</h1>
+    <p>
+      Hozir internetga ulanishda muammo bor.<br />
+      Ulanish tiklanishi bilan Lingify ishlashda davom etadi.
+    </p>
+    <a href="/" class="btn">
+      🔄 Qayta urinish
+    </a>
+    <div class="tips">
+      <h3>Offline ham qilish mumkin:</h3>
+      <ul>
+        <li>Oldin yuklangan darslarni ko'rish</li>
+        <li>So'zlar lug'atini ko'rish</li>
+        <li>Progress statistikasini ko'rish</li>
+        <li>O'yinlarni o'ynash (cached)</li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('online', () => location.reload())
+  </script>
+</body>
+</html>
