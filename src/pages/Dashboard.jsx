@@ -35,67 +35,217 @@ const testimonials = [
   { name: 'Javohir, TOEFL 102', text: 'Daily micro-lessons and partner chats made my progress super fast.' },
 ]
 
-function UnauthenticatedExperience({ onOpenRegister }) {
-  const featureCards = useMemo(
-    () => [
-      { icon: Bot, title: 'AI Speaking Coach', description: 'Practice natural conversations and get instant feedback.' },
-      { icon: BookOpenCheck, title: 'Smart Vocabulary', description: 'Spaced repetition and practical topic-based words.' },
-      { icon: ChartColumnBig, title: 'Mock Exams', description: 'IELTS/TOEFL style tests with analytics and band estimate.' },
-      { icon: UsersRound, title: 'Partner Matching', description: 'Connect with learners at your level and practice daily.' },
-    ],
-    [],
-  )
+const FEATURES = [
+  { icon: Bot,          title: 'AI Speaking Coach',  desc: 'Inglizcha gapiring, xatolaringiz tuzatilsin. Har kuni 15 daqiqa.',        color: 'bg-violet-100 text-violet-700' },
+  { icon: BookOpenCheck,title: 'Smart Vocabulary',    desc: 'So\'zlarni saqlang, papkalang, flashcard bilan takrorlang.',               color: 'bg-emerald-100 text-emerald-700' },
+  { icon: ChartColumnBig,title:'Mock Imtihonlar',     desc: 'IELTS/TOEFL/SAT formatida real test toping. Band score ko\'ring.',         color: 'bg-amber-100 text-amber-700' },
+  { icon: UsersRound,   title: 'Partner Matching',    desc: 'O\'z darajangizda partner toping, har kuni speaking mashq qiling.',        color: 'bg-sky-100 text-sky-700' },
+  { icon: Target,       title: 'Daraja Testi',        desc: 'A0 dan C1 gacha 15 ta savol — darajangizni bilib oling.',                  color: 'bg-rose-100 text-rose-700' },
+  { icon: Trophy,       title: 'Reyting',             desc: 'O\'zbekistondagi boshqa o\'rganuvchilar bilan raqobatlashing.',            color: 'bg-indigo-100 text-indigo-700' },
+  { icon: GraduationCap,title: 'O\'qituvchi Kurslari',desc: 'Professional IELTS/TOEFL o\'qituvchilardan kurslar xarid qiling.',         color: 'bg-teal-100 text-teal-700' },
+  { icon: MessagesSquare,title:'Real-time Chat',      desc: 'Partnerlar bilan matn va audio xabar almashing.',                          color: 'bg-pink-100 text-pink-700' },
+]
 
+const STATS = [
+  { value: '5 200+', label: 'Faol o\'quvchilar' },
+  { value: '24',     label: 'Professional o\'qituvchilar' },
+  { value: '340+',   label: 'Dars va mashqlar' },
+  { value: '4.9★',   label: 'O\'rtacha reyting' },
+]
+
+const TESTIMONIALS = [
+  { name: 'Malika T.',    level: 'IELTS 7.5',  text: 'Speaking bo\'limida 8.0 oldim. Lingify\'dagi partner mashqlari juda foydali bo\'ldi!' },
+  { name: 'Jasur K.',     level: 'TOEFL 114',  text: 'Har kuni 20 daqiqa AI speaking bilan mashq qildim. 3 oyda TOEFL ni yechimdim.' },
+  { name: 'Dilnoza X.',   level: 'B2 darajasi',text: 'Vocabulary va flashcard tizimi zo\'r. 2 oyda 500+ so\'z o\'rgandim.' },
+  { name: 'Sardor M.',    level: 'SAT 1450',   text: 'Mock testlar haqiqiy imtihonga juda o\'xshash. Natijam 200 ballga o\'sdi.' },
+]
+
+const PLANS = [
+  {
+    name: 'Bepul',
+    price: '0',
+    period: 'abadiy',
+    color: 'border-slate-200 bg-white',
+    btnColor: 'border border-slate-300 text-slate-700 hover:bg-slate-50',
+    features: ['3 ta dars/kun', '1 ta mock test/oy', '50 ta so\'z', 'Partner topish', 'Asosiy statistika'],
+    notIncluded: ['AI Writing feedback', 'Cheksiz testlar', 'Sertifikat'],
+  },
+  {
+    name: 'Premium',
+    price: '49 000',
+    period: '/oy',
+    color: 'border-indigo-500 bg-gradient-to-br from-indigo-50 to-violet-50 shadow-xl',
+    btnColor: 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md',
+    badge: '🔥 Eng ko\'p tanlangan',
+    features: ['Cheksiz darslar', 'Cheksiz mock testlar', 'Cheksiz vocabulary', 'AI Writing & Speaking feedback', 'Sertifikat', 'PDF natijalar', 'Priority partner matching'],
+    notIncluded: [],
+  },
+]
+
+function UnauthenticatedExperience({ onOpenRegister }) {
   return (
-    <div className="space-y-5 pb-20 xl:pb-0">
-      <section className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-violet-50 p-7 shadow-sm">
-        <p className="inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">LINGIFY DEMO</p>
-        <h2 className="mt-4 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
-          Speak English with AI &amp; Real People
-        </h2>
-        <p className="mt-3 max-w-2xl text-slate-600">
-          Prepare for IELTS/TOEFL faster with personalized speaking practice, vocabulary training, and real partner conversations.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={onOpenRegister}
-            className="rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:scale-[1.03]"
-          >
-            Get Started Free
-          </button>
-          <button
-            type="button"
-            onClick={onOpenRegister}
-            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-          >
-            Try Demo
-          </button>
+    <div className="space-y-8 pb-24 xl:pb-0">
+
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 p-8 text-white shadow-xl md:p-12">
+        <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/5" />
+        <div className="absolute -bottom-8 right-24 h-40 w-40 rounded-full bg-violet-500/30" />
+        <div className="relative">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
+            🇺🇿 O'zbek tilida ingliz tili platformasi
+          </span>
+          <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight md:text-5xl lg:text-6xl">
+            Ingliz tilini<br />
+            <span className="text-yellow-300">0 dan</span> o'rganing.
+          </h1>
+          <p className="mt-4 max-w-xl text-base text-indigo-200 md:text-lg">
+            IELTS, TOEFL, SAT tayyorlov. AI Speaking Coach. Real partnerlar.
+            O'zbek tilida tushuntirishlar bilan — hamma narsa bir joyda.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <button onClick={onOpenRegister}
+              className="rounded-2xl bg-white px-6 py-3 text-sm font-bold text-indigo-700 shadow-lg transition hover:scale-[1.03] hover:shadow-xl">
+              Bepul Boshlash →
+            </button>
+            <button onClick={onOpenRegister}
+              className="rounded-2xl border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+              Demo ko'rish
+            </button>
+          </div>
+          {/* Mini stats */}
+          <div className="mt-8 flex flex-wrap gap-6">
+            {STATS.map(({ value, label }) => (
+              <div key={label}>
+                <p className="text-2xl font-black text-yellow-300">{value}</p>
+                <p className="text-xs text-indigo-300">{label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {featureCards.map((item) => (
-          <FeatureCard key={item.title} {...item} />
-        ))}
-      </section>
-
-      <section className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
-        <LockedFeatureWrapper onClick={onOpenRegister}>
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-sm font-semibold text-slate-700">Progress Preview</p>
-            <div className="mt-4 h-40 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100" />
-          </div>
-        </LockedFeatureWrapper>
-        <div className="space-y-3">
-          {testimonials.map((item) => (
-            <article key={item.name} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <p className="text-sm text-slate-600">{item.text}</p>
-              <p className="mt-2 text-sm font-semibold text-slate-900">{item.name}</p>
+      {/* ── Features grid ── */}
+      <section>
+        <div className="mb-5 text-center">
+          <h2 className="text-2xl font-bold text-slate-900">Nima olasiz?</h2>
+          <p className="mt-1 text-sm text-slate-500">Ingliz tilini o'rganishning barcha zarur vositalar bir platformada</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {FEATURES.map(({ icon: Icon, title, desc, color }) => (
+            <article key={title} onClick={onOpenRegister}
+              className="cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+              <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl ${color}`}>
+                <Icon size={18} />
+              </div>
+              <h3 className="font-semibold text-slate-900">{title}</h3>
+              <p className="mt-1 text-xs leading-5 text-slate-500">{desc}</p>
             </article>
           ))}
         </div>
       </section>
+
+      {/* ── How it works ── */}
+      <section className="rounded-3xl bg-slate-50 p-6 md:p-8">
+        <h2 className="mb-6 text-center text-2xl font-bold text-slate-900">Qanday ishlaydi?</h2>
+        <div className="grid gap-4 md:grid-cols-4">
+          {[
+            { step: '01', icon: Target,       title: 'Daraja aniqlash',    desc: '15 savollik placement test orqali darajangizni biling' },
+            { step: '02', icon: BookOpenCheck, title: 'Dars olish',         desc: 'O\'zbekcha tushuntirishli A0-C1 curriculum bo\'yicha o\'rganing' },
+            { step: '03', icon: UsersRound,   title: 'Partner bilan mashq', desc: 'Speaking partnerini toping va har kuni gaplashing' },
+            { step: '04', icon: CirclePlay,   title: 'Test topshiring',     desc: 'IELTS/TOEFL mock test topshiring, band score oling' },
+          ].map(({ step, icon: Icon, title, desc }) => (
+            <div key={step} className="flex flex-col items-center gap-3 text-center">
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg">
+                <Icon size={22} />
+                <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 text-[10px] font-black text-white">
+                  {step}
+                </span>
+              </div>
+              <div>
+                <p className="font-bold text-slate-900">{title}</p>
+                <p className="mt-1 text-xs text-slate-500">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Testimonials ── */}
+      <section>
+        <h2 className="mb-5 text-center text-2xl font-bold text-slate-900">Ularning natijalari</h2>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {TESTIMONIALS.map((t) => (
+            <article key={t.name} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700">
+                  {t.name[0]}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">{t.name}</p>
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                    {t.level}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-slate-600">"{t.text}"</p>
+              <div className="mt-3 flex gap-0.5 text-amber-400">
+                {Array.from({ length: 5 }).map((_, i) => <span key={i}>★</span>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Pricing ── */}
+      <section>
+        <div className="mb-6 text-center">
+          <h2 className="text-2xl font-bold text-slate-900">Narxlar</h2>
+          <p className="mt-1 text-sm text-slate-500">Bepul boshlab, kerakli paytda Premium ga o'ting</p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2">
+          {PLANS.map((plan) => (
+            <article key={plan.name} className={`relative rounded-3xl border-2 p-6 ${plan.color}`}>
+              {plan.badge && (
+                <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-1 text-xs font-bold text-white shadow">
+                  {plan.badge}
+                </span>
+              )}
+              <p className="text-lg font-bold text-slate-900">{plan.name}</p>
+              <div className="mt-2 flex items-end gap-1">
+                <span className="text-4xl font-black text-slate-900">{plan.price}</span>
+                <span className="mb-1 text-sm text-slate-400">{plan.price !== '0' ? 'UZS' : ''} {plan.period}</span>
+              </div>
+              <ul className="mt-5 space-y-2">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-slate-700">
+                    <span className="text-emerald-500">✓</span>{f}
+                  </li>
+                ))}
+                {plan.notIncluded.map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-slate-400">
+                    <span>—</span>{f}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={onOpenRegister}
+                className={`mt-6 w-full rounded-2xl py-3 text-sm font-bold transition ${plan.btnColor}`}>
+                {plan.name === 'Bepul' ? 'Bepul Boshlash' : 'Premium Olish'}
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Final CTA ── */}
+      <section className="rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-700 p-8 text-center text-white">
+        <h2 className="text-2xl font-bold">Bugun boshlang. Ertaga kech bo'ladi.</h2>
+        <p className="mt-2 text-indigo-200">5 200+ o'zbek yoshlari allaqachon o'rganmoqda.</p>
+        <button onClick={onOpenRegister}
+          className="mt-5 rounded-2xl bg-white px-8 py-3.5 text-sm font-bold text-indigo-700 shadow-lg transition hover:scale-105">
+          Bepul Ro'yxatdan O'tish →
+        </button>
+      </section>
+
     </div>
   )
 }

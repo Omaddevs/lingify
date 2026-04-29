@@ -1,5 +1,5 @@
 import {
-  BookOpenCheck, ChartNoAxesColumn, FileCheck2, GraduationCap, Handshake,
+  BookOpenCheck, ChartNoAxesColumn, FileCheck2, Gamepad2, GraduationCap, Handshake,
   House, LayoutDashboard, Lock, MessageCircleMore, Settings, Trophy, Video,
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
@@ -14,6 +14,7 @@ const BASE_ITEMS = [
   { name: 'O\'qituvchilar', icon: GraduationCap,     path: '/teachers' },
   { name: 'Progress',       icon: ChartNoAxesColumn, path: '/progress' },
   { name: 'Leaderboard',    icon: Trophy,            path: '/leaderboard' },
+  { name: 'O\'yinlar',      icon: Gamepad2,          path: '/games' },
   { name: 'Messages',       icon: MessageCircleMore, path: '/messages' },
   { name: 'Vocabulary',     icon: BookOpenCheck,     path: '/vocabulary' },
   { name: 'Settings',       icon: Settings,          path: '/settings' },
@@ -30,13 +31,13 @@ function Sidebar({ locked = false, onLockedClick, recommendedItem }) {
   return (
     <aside
       aria-label="Main navigation"
-      className="sticky top-5 hidden h-[calc(100vh-40px)] w-[250px] flex-col rounded-[20px] border border-slate-100 bg-white p-5 shadow-md xl:flex"
+      className="sticky top-5 hidden h-[calc(100vh-40px)] w-[250px] flex-col overflow-hidden rounded-[20px] border border-slate-100 bg-white p-5 shadow-md xl:flex"
     >
       <div className="mb-8 flex items-center gap-2.5">
         <img src={logo1} alt="Lingify — go to home page" className="h-10 w-auto" />
       </div>
 
-      <nav aria-label="Site pages">
+      <nav aria-label="Site pages" className="min-h-0 flex-1 overflow-y-auto pr-1">
         <ul className="space-y-2">
           {menuItems.map(({ name, icon: Icon, path }) => (
             <li key={name}>
@@ -73,7 +74,7 @@ function Sidebar({ locked = false, onLockedClick, recommendedItem }) {
         </ul>
       </nav>
 
-      <div className="mt-auto rounded-2xl bg-slate-100/70 p-4 text-center">
+      <div className="mt-4 rounded-2xl bg-slate-100/70 p-4 text-center">
         <div className="mb-3 flex justify-center" aria-hidden="true">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 24L7.5 12L13 18L16 8L19 18L24.5 12L28 24H4Z" fill="#6366f1" stroke="#6366f1" strokeWidth="1.5" strokeLinejoin="round"/>
