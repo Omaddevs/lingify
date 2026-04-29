@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 import {
   Bell, Camera, ChevronRight, CircleHelp, CreditCard,
-  Globe, Lock, LogOut, Monitor, ShieldCheck, UserRound,
+  Globe, Lock, LogOut, Monitor, Moon, ShieldCheck, Sun, UserRound,
 } from 'lucide-react'
+import { useDarkMode } from '../hooks/useDarkMode'
 import Header from '../components/Header'
 import MobileBottomNav from '../components/Cards/MobileBottomNav'
 import Sidebar from '../components/Sidebar'
@@ -296,6 +297,107 @@ function SubscriptionSection({ openPremium }) {
   )
 }
 
+// ── Appearance Section ────────────────────────────────────────────────────────
+function AppearanceSection() {
+  const { dark, toggle } = useDarkMode()
+  const [fontSize, setFontSize] = useState('normal')
+  const [accentColor, setAccentColor] = useState('indigo')
+
+  const COLORS = [
+    { id: 'indigo', label: 'Indigo',  hex: '#6366f1' },
+    { id: 'violet', label: 'Violet',  hex: '#8b5cf6' },
+    { id: 'blue',   label: 'Blue',    hex: '#3b82f6' },
+    { id: 'emerald',label: 'Emerald', hex: '#10b981' },
+    { id: 'rose',   label: 'Rose',    hex: '#f43f5e' },
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* Dark mode card */}
+      <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 px-5 py-4">
+          <h3 className="font-bold text-slate-900">Ko'rinish</h3>
+          <p className="mt-0.5 text-xs text-slate-500">Interfeys rangini va uslubini sozlang</p>
+        </div>
+
+        <div className="p-5 space-y-4">
+          {/* Theme toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition ${dark ? 'bg-slate-800 text-yellow-400' : 'bg-amber-100 text-amber-600'}`}>
+                {dark ? <Moon size={18} /> : <Sun size={18} />}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800">
+                  {dark ? 'Qorong\'u rejim' : 'Yorug\' rejim'}
+                </p>
+                <p className="text-xs text-slate-500">
+                  {dark ? 'Ko\'zni himoya qiladi, tungi o\'qish uchun qulay' : 'Kunduzgi ko\'rinish, standart holat'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={toggle}
+              className={`relative h-7 w-13 rounded-full transition-colors duration-300 ${dark ? 'bg-indigo-600' : 'bg-slate-200'}`}
+              style={{ width: 52 }}
+            >
+              <span className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-300 ${dark ? 'translate-x-7' : 'translate-x-1'}`} />
+            </button>
+          </div>
+
+          {/* Preview card */}
+          <div className={`rounded-2xl border p-4 transition ${dark ? 'border-slate-700 bg-slate-800' : 'border-slate-100 bg-slate-50'}`}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-8 w-8 rounded-xl bg-indigo-500" />
+              <div>
+                <div className={`h-3 w-24 rounded-full ${dark ? 'bg-slate-600' : 'bg-slate-300'}`} />
+                <div className={`mt-1 h-2 w-16 rounded-full ${dark ? 'bg-slate-700' : 'bg-slate-200'}`} />
+              </div>
+            </div>
+            <div className={`h-2 w-full rounded-full ${dark ? 'bg-slate-700' : 'bg-slate-200'}`} />
+            <div className={`mt-1.5 h-2 w-4/5 rounded-full ${dark ? 'bg-slate-700' : 'bg-slate-200'}`} />
+            <p className={`mt-2 text-[11px] ${dark ? 'text-slate-400' : 'text-slate-400'}`}>
+              Ko'rinish oldindan namoyish
+            </p>
+          </div>
+
+          {/* Font size */}
+          <div>
+            <p className="mb-2 text-xs font-semibold text-slate-600">Matn o'lchami</p>
+            <div className="flex gap-2">
+              {[
+                { id: 'small',  label: 'Kichik',  size: '12px' },
+                { id: 'normal', label: 'Normal',  size: '14px' },
+                { id: 'large',  label: 'Katta',   size: '16px' },
+              ].map(({ id, label, size }) => (
+                <button key={id} onClick={() => setFontSize(id)}
+                  className={`flex-1 rounded-xl border-2 py-2.5 text-xs font-semibold transition ${fontSize === id ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}>
+                  <span style={{ fontSize }}>{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Accent color */}
+          <div>
+            <p className="mb-2 text-xs font-semibold text-slate-600">Asosiy rang</p>
+            <div className="flex gap-2">
+              {COLORS.map(({ id, label, hex }) => (
+                <button key={id} onClick={() => setAccentColor(id)}
+                  title={label}
+                  className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${accentColor === id ? 'ring-2 ring-offset-2' : 'hover:scale-110'}`}
+                  style={{ background: hex, ringColor: hex }}>
+                  {accentColor === id && <span className="text-white text-sm">✓</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  )
+}
+
 function PlaceholderSection({ title, icon: Icon }) {
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -314,7 +416,7 @@ function RightPanel({ section, user, patchUser, logout, openPremium }) {
     case 'notifications': return <NotificationsSection />
     case 'privacy':       return <PrivacySection />
     case 'subscription':  return <SubscriptionSection openPremium={openPremium} />
-    case 'appearance':    return <PlaceholderSection title="Ko'rinish sozlamalari" icon={Monitor} />
+    case 'appearance':    return <AppearanceSection />
     case 'language':      return <PlaceholderSection title="Til sozlamalari" icon={Globe} />
     default: {
       const item = settingMenu.find((m) => m.section === section)
