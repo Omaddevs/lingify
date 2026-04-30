@@ -6,6 +6,8 @@ import {
   Flame, GraduationCap, MessagesSquare, Target, Trophy, UsersRound, Zap,
 } from 'lucide-react'
 import { DailyChallengeWidget } from '../components/DailyChallengeWidget'
+import { WordOfTheDay } from '../components/WordOfTheDay'
+import { StreakCalendar } from '../components/StreakCalendar'
 import BottomPanels from '../components/Cards/BottomPanels'
 import LearningModules from '../components/Cards/LearningModules'
 import MobileBottomNav from '../components/Cards/MobileBottomNav'
@@ -494,6 +496,11 @@ function PersonalizedDashboard() {
             <div className="space-y-4 pb-20 xl:pb-0">
             <OverviewCards />
             <DailyChallengeWidget />
+            {/* Word of the Day + Streak Calendar */}
+            <div className="grid gap-4 lg:grid-cols-2">
+              <WordOfTheDay />
+              <StreakCalendar />
+            </div>
             <PartnerLessonSection />
             <LearningModules />
             <BottomPanels />

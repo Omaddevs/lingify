@@ -7,6 +7,8 @@ import { useStreak } from './hooks/useStreak'
 import { NotificationToast } from './components/NotificationToast'
 import OnboardingModal from './components/OnboardingModal'
 import { AIChatWidget } from './components/AIChatWidget'
+import { PWAInstallBanner } from './components/PWAInstallBanner'
+import { usePageTracking } from './hooks/useAnalytics'
 
 // ── Eager loaded (critical path) ─────────────────────────────────────────────
 import Dashboard       from './pages/Dashboard'
@@ -35,6 +37,11 @@ const VocabularyPage      = lazy(() => import('./pages/VocabularyPage'))
 const CertificatePage     = lazy(() => import('./pages/CertificatePage'))
 const ProfilePage         = lazy(() => import('./pages/ProfilePage'))
 const SearchPage          = lazy(() => import('./pages/SearchPage'))
+const PaymentPage              = lazy(() => import('./pages/PaymentPage'))
+const NotFoundPage             = lazy(() => import('./pages/NotFoundPage'))
+const NotificationCenterPage   = lazy(() => import('./pages/NotificationCenterPage'))
+const VideoCoursePage          = lazy(() => import('./pages/VideoCoursePage'))
+const LaunchPage               = lazy(() => import('./pages/LaunchPage'))
 
 // ── Loading spinner ───────────────────────────────────────────────────────────
 function PageLoader() {
@@ -60,8 +67,9 @@ function Spinner() {
 function App() {
   const { user, loading, completeOnboarding } = useUser()
   const { notifications } = useNotification()
-  useStreak()   // auto-increments streak daily
-  useDarkMode() // applies .dark class to <html> // applies .dark class to <html> from localStorage
+  useStreak()        // auto-increments streak daily
+  useDarkMode()      // applies .dark class to <html>
+  usePageTracking()  // GA4 page view tracking
 
   if (loading) return <Spinner />
 
@@ -103,13 +111,17 @@ function App() {
           <Route path="/speaking-practice"     element={<SpeakingPracticePage />} />
           <Route path="/settings"              element={<SettingsPage />} />
           <Route path="/certificate"           element={<CertificatePage />} />
-          <Route path="/search"               element={<SearchPage />} />
+          <Route path="/search"                element={<SearchPage />} />
+          <Route path="/payment"               element={<PaymentPage />} />
+          <Route path="/notifications"         element={<NotificationCenterPage />} />
+          <Route path="/course/:courseId"      element={<VideoCoursePage />} />
+          <Route path="/launch"                element={<LaunchPage />} />
           <Route path="/login"                 element={<Navigate to="/" replace />} />
           <Route path="/vocabulary/words"      element={<VocabularyPage />} />
           <Route path="/vocabulary/categories" element={<VocabularyPage />} />
           <Route path="/progress/activity"     element={<ProgressPage />} />
           <Route path="/lessons/all"           element={<OnlineLessonsPage />} />
-          <Route path="*"                      element={<Navigate to="/" replace />} />
+          <Route path="*"                      element={<NotFoundPage />} />
         </Routes>
       </Suspense>
 
@@ -119,6 +131,7 @@ function App() {
 
       <NotificationToast notifications={notifications} />
       <AIChatWidget />
+      <PWAInstallBanner />
     </>
   )
 }
